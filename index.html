@@ -66,7 +66,6 @@ h1 em { font-style: normal; color: var(--accent); }
   padding: 7px 14px; cursor: pointer; font-size: 14px; font-weight: 500; transition: border-color .15s; }
 .filters button:hover { border-color: var(--muted); }
 .filters button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.filters small { font: 400 12px var(--mono); opacity: .7; margin-left: 4px; }
 
 /* Cuadrícula */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 14px; }
@@ -327,7 +326,7 @@ function render() {
 
   $("filters").setAttribute("aria-label", t.filterLabel);
   $("filters").innerHTML = ["all", "iphone", "android", "web", "sheets"].map((k) =>
-    `<button type="button" id="filter-${k}" data-filter="${k}" aria-pressed="${k === filter}">${esc(t.filters[k])}<small>${count(k)}</small></button>`).join("");
+    `<button type="button" id="filter-${k}" data-filter="${k}" aria-pressed="${k === filter}">${esc(t.filters[k])}</button>`).join("");
 
   $("grid").innerHTML = ordered()
     .filter((p) => filter === "all" || p.platforms.includes(filter))
