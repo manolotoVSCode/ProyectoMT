@@ -299,6 +299,12 @@ const PROFILE = {
       links: [{ type: "mail", url: "mailto:contacto@manoloto.com?subject=Plantilla%20Presupuesto%20Anual" }],
       es: { tag: "Plantilla de presupuesto anual para un grupo de empresas.", desc: "Un libro de Excel para presupuestar un año mes a mes, con hasta 7 empresas y un corporativo: ingresos por volumen y tarifa, nómina por puesto, gastos, EBITDA, ISR y PTU estimados y utilidad neta, por empresa o consolidado, en MXN y USD. Trae una hoja de guía que explica cómo usarlo. Si la quieres, pídemela y te la mando gratis por correo." },
       en: { tag: "An annual budget template for a group of companies.", desc: "An Excel workbook to budget a year month by month, for up to 7 companies plus a corporate office: revenue by volume and rate, payroll by position, expenses, EBITDA, estimated taxes and net income, per company or consolidated, in MXN and USD. It includes a guide sheet on how to use it. If you want it, ask me and I'll email it to you for free." } },
+    { id: "mt-guardrails", since: "2026-10-28", wide: true, name: "MT Guardrails", platforms: ["ia"],
+      stack: ["Claude Code", "Markdown", "Bash"],
+      imgs: [], // sin capturas
+      links: [{ type: "github", url: "https://github.com/manolotoVSCode/mt-guardrails" }],
+      es: { tag: "Agentes de solo lectura y búsqueda de secretos para Claude Code.", desc: "Un plugin de código abierto (licencia MIT) para Claude Code: dos agentes de solo lectura, un revisor de código y un explorador de repositorios, y un skill que busca secretos expuestos en un proyecto sin usar la red. No modifica archivos, no hace llamadas de red y no guarda datos." },
+      en: { tag: "Read-only agents and secret scanning for Claude Code.", desc: "An open-source plugin (MIT license) for Claude Code: two read-only agents, a code reviewer and a repository explorer, plus a skill that looks for exposed secrets in a project without using the network. It doesn't modify files, make network calls or store data." } },
     { id: "little-galaxy", since: "2025-01", name: "Little Galaxy", platforms: ["iphone", "web"],
       stack: ["React", "TypeScript", "Capacitor"],
       imgs: ["img/little-galaxy-1.webp", "img/little-galaxy-2.webp"],
