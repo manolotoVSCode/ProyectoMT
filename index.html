@@ -118,8 +118,10 @@ dialog::backdrop { background: var(--shade); }
 .sheet.wide p { max-width: 60ch; }
 .sheet.wide .shots { flex-direction: column; gap: 16px; }
 .sheet.wide .shots img { width: 100%; border-radius: 12px; margin: 0; }
-.sheet.wide .shots.phones { flex-direction: row; justify-content: center; }
-.sheet.wide .shots.phones img { width: min(220px, calc(50% - 8px)); border-radius: 18px; }
+/* Webs con explicación: cada captura en su fila, como los diagramas de los agentes */
+.agent.shot h4 { font: 700 19px/1.2 var(--display); letter-spacing: -.01em; }
+.shot .pair { display: flex; justify-content: center; gap: 12px; }
+.agent .pair img { width: min(160px, calc(50% - 6px)); border-radius: 18px; }
 /* Agentes: un diagrama por agente, con su papel y cómo se hace cumplir */
 .agents { display: flex; flex-direction: column; gap: 28px; }
 .agents h3 { font: 700 22px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
@@ -141,7 +143,6 @@ dialog::backdrop { background: var(--shade); }
   .sheet { grid-template-columns: minmax(0, 1fr); padding: 24px 20px; }
   .shots img { width: calc(50% - 6px); }
   .sheet.wide .shots img { width: 100%; }
-  .sheet.wide .shots.phones img { width: calc(50% - 8px); }
   .agent { grid-template-columns: minmax(0, 1fr); gap: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -196,12 +197,28 @@ const PROFILE = {
   // platforms: "iphone", "android", "web", "sheets" o "ia" (alimentan los filtros y las cifras)
   // links: "web", "store", "play", "mail" o "github"; si falta el de la App Store, se deja vacío
   // es.name / en.name: nombre por idioma, si cambia; agents: lista opcional de agentes con su diagrama
+  // shots (webs): en lugar de imgs, cada captura con su título y explicación; { phones: [...] } junta dos del iPhone en una fila
   // agentsDir: carpeta de esos diagramas (por omisión img/agentes); es.agentsTitle / en.agentsTitle: título de la sección, si cambia
   projects: [
     { id: "chp-web", since: "2026-01", name: "CHP App", platforms: ["web", "iphone"], featured: true, wide: true, icon: "img/icons/chp-app.png",
       stack: ["Python", "Flask", "PostgreSQL", "Supabase", "Bootstrap", "Chart.js", "Swift", "SwiftUI"],
-      imgs: ["img/chp-web-1.webp", "img/chp-web-2.webp"],
-      phones: ["img/chp-app-1.webp", "img/chp-app-2.webp"], // la misma plataforma en el iPhone
+      shots: [
+        { src: "img/chp-web-1.webp",
+          es: { title: "chpmex.com", text: "El sitio público de CHP México: cogeneración para la industria, con el diagrama animado de gas, motor, calor y planta, y la entrada a CHP App." },
+          en: { title: "chpmex.com", text: "CHP México's public site: cogeneration for industry, with the animated diagram of gas, engine, heat and plant, and the way into CHP App." } },
+        { src: "img/chp-web-2.webp",
+          es: { title: "Contabilidad energética", text: "Cada planta con su periodo, su consumo eléctrico y su costo total de electricidad y gas, más el costo mes a mes. Todo sale de las facturas que se suben. Con datos de demostración." },
+          en: { title: "Energy accounting", text: "Each plant with its period, power consumption and total electricity and gas cost, plus the cost month by month. It all comes from the uploaded bills. Shown with demo data." } },
+        { src: "img/chp-web-3.webp",
+          es: { title: "Consumo por horario tarifario", text: "Base, intermedia y punta mes a mes contra el costo por kWh, para ver cuánto pesa la punta en el consumo y cuánto en el costo." },
+          en: { title: "Consumption by rate period", text: "Base, intermediate and peak month by month against the cost per kWh, to see how much peak weighs in consumption and how much in cost." } },
+        { src: "img/chp-web-4.webp",
+          es: { title: "Cargos no reconocidos", text: "Compara lo facturado con lo que dice el contrato y lista cada diferencia con su monto y el plazo para reclamarla, junto con las bonificaciones a favor." },
+          en: { title: "Unrecognized charges", text: "It compares what was billed with what the contract says and lists each difference with its amount and the deadline to dispute it, along with the credits in your favor." } },
+        { phones: ["img/chp-app-1.webp", "img/chp-app-2.webp"], // la misma plataforma en el iPhone
+          es: { title: "En el iPhone", text: "La app nativa muestra lo mismo por planta: consumo por horario, costo mensual por concepto y las discrepancias contra el contrato, mes a mes." },
+          en: { title: "On the iPhone", text: "The native app shows the same per plant: consumption by rate period, monthly cost by line item and discrepancies against the contract, month by month." } },
+      ],
       links: [{ type: "web", url: "https://app.chpmex.com", label: "app.chpmex.com" }, { type: "web", url: "https://chpmex.com", label: "chpmex.com" }],
       es: { tag: "La plataforma de CHP México: energía, cogeneración y contabilidad por planta.", desc: "Mi proyecto más grande. La plataforma lee facturas de luz y gas, calcula ahorros y proyecciones de cogeneración, lleva la contabilidad de cada planta y muestra tableros a los clientes, en la web y en el iPhone. Incluye el sitio público chpmex.com y sobre ella funciona también CHP Panel de Control." },
       en: { tag: "CHP México's platform: energy, cogeneration and per-plant accounting.", desc: "My biggest project. The platform reads power and gas bills, calculates cogeneration savings and projections, keeps each plant's books and shows dashboards to clients, on the web and on the iPhone. It includes the public site chpmex.com, and CHP Panel de Control also runs on top of it." } },
@@ -219,7 +236,14 @@ const PROFILE = {
       en: { tag: "Split expenses, free and with no sign-up.", desc: "Split expenses with friends, family or on trips. Free, no sign-up and no limits on expenses or groups. Multiple currencies, settle up in the fewest payments, and it works offline." } },
     { id: "savium-share-dashboard", since: "2026-10-13", wide: true, name: "Savium Share Dashboard", platforms: ["web"],
       stack: ["React", "TypeScript", "Recharts", "Supabase"],
-      imgs: ["img/savium-share-dashboard-1.webp", "img/savium-share-dashboard-2.webp"],
+      shots: [
+        { src: "img/savium-share-dashboard-1.webp",
+          es: { title: "El resumen", text: "Movimientos, grupos nuevos y dormidos, teléfonos activos y descargas por tienda, con el aviso de comentarios sin leer y el periodo a 30, 90 o 365 días." },
+          en: { title: "The overview", text: "Expenses, new and dormant groups, active phones and downloads per store, with the unread feedback alert and a 30, 90 or 365-day period." } },
+        { src: "img/savium-share-dashboard-2.webp",
+          es: { title: "Tiendas, países e idiomas", text: "Instalaciones y desinstalaciones diarias en Google Play, valoración y cierres inesperados, y el uso repartido por país, idioma y versión de la app." },
+          en: { title: "Stores, countries and languages", text: "Daily installs and uninstalls on Google Play, rating and crashes, and usage split by country, language and app version." } },
+      ],
       links: [], // privado
       es: { tag: "El tablero de uso de Savium Share.", desc: "El dashboard privado de Savium Share: grupos, movimientos y teléfonos activos por día, descargas de App Store y Google Play, países, idiomas, versiones, reseñas y comentarios de los usuarios. Sin nombres ni datos personales." },
       en: { tag: "Savium Share's usage dashboard.", desc: "Savium Share's private dashboard: groups, expenses and active phones per day, App Store and Google Play downloads, countries, languages, versions, reviews and user feedback. No names or personal data." } },
@@ -237,19 +261,40 @@ const PROFILE = {
       en: { tag: "A piggy bank that teaches kids to save.", desc: "A digital piggy bank that teaches kids about money: three jars, automatic allowance, chores and goals." } },
     { id: "savium-corporate", since: "2026-04-20", wide: true, name: "Savium Corporate", platforms: ["web"],
       stack: ["React", "TypeScript", "Tailwind", "Supabase"],
-      imgs: ["img/savium-corporate-1.webp", "img/savium-corporate-2.webp"],
+      shots: [
+        { src: "img/savium-corporate-1.webp",
+          es: { title: "La portada", text: "La propuesta en una línea, con un adelanto del estado de resultados, el balance y el puntaje de salud financiera. El sitio está en español e inglés." },
+          en: { title: "The home page", text: "The pitch in one line, with a preview of the income statement, balance sheet and financial health score. The site is in Spanish and English." } },
+        { src: "img/savium-corporate-2.webp",
+          es: { title: "Los módulos", text: "Estado de resultados, balance, flujo de efectivo, 13 índices financieros con semáforos, un CRM y resultados por proyecto o unidad de negocio." },
+          en: { title: "The modules", text: "Income statement, balance sheet, cash flow, 13 financial ratios with traffic lights, a CRM and results per project or business unit." } },
+      ],
       links: [{ type: "web", url: "https://saviumcorporate.manoloto.com" }],
       es: { tag: "Las finanzas de una PyME, sin contabilidad.", desc: "Gestión financiera para PyMEs mexicanas: estado de resultados, balance, flujo de caja e índices financieros con semáforos, sin saber de contabilidad." },
       en: { tag: "Small-business finances, no accounting needed.", desc: "Financial management for Mexican small businesses: income statement, balance sheet, cash flow and financial ratios with traffic lights, no accounting knowledge needed." } },
     { id: "savium-condo", since: "2026-04-16", wide: true, name: "Savium Condo", platforms: ["web"],
       stack: ["React", "TypeScript", "Tailwind", "Supabase"],
-      imgs: ["img/savium-condo-1.webp", "img/savium-condo-2.webp"],
+      shots: [
+        { src: "img/savium-condo-1.webp",
+          es: { title: "El tablero del mes", text: "Propietarios activos, ingresos contra lo esperado, gastos, balance y saldo en cuenta; el mes en curso con sus gastos recurrentes y la morosidad por unidad." },
+          en: { title: "The monthly dashboard", text: "Active owners, income against what was expected, expenses, balance and account balance; the current month with its recurring expenses and overdue units." } },
+        { src: "img/savium-condo-2.webp",
+          es: { title: "Informes", text: "El desglose mensual de ingresos y gastos, con avisos cuando un rubro sube, baja o no se registró, y el reporte ejecutivo en PDF." },
+          en: { title: "Reports", text: "The monthly breakdown of income and expenses, with alerts when a category goes up, down or wasn't recorded, and the executive report as a PDF." } },
+      ],
       links: [], // sin web pública todavía
       es: { tag: "La administración de un condominio.", desc: "Administración de condominios: cuotas y pagos de cada propietario, gastos y proveedores, fondos, morosidad por unidad e informes del mes." },
       en: { tag: "Running a condominium.", desc: "Condominium management: each owner's fees and payments, expenses and suppliers, funds, overdue units and monthly reports." } },
     { id: "pda", since: "2026-09", wide: true, name: "PDA", platforms: ["web"],
       stack: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Tailwind"],
-      imgs: ["img/pda-1.webp", "img/pda-2.webp"],
+      shots: [
+        { src: "img/pda-2.webp",
+          es: { title: "Lo que responde el candidato", text: "En cada una de las tres partes elige exactamente 8 palabras que lo describen; al llegar al límite, el resto se desactiva." },
+          en: { title: "What the candidate answers", text: "In each of the three parts they pick exactly 8 words that describe them; once they hit the limit, the rest are disabled." } },
+        { src: "img/pda-1.webp",
+          es: { title: "El informe", text: "Índice de consistencia, resumen ejecutivo, perfil por dimensión y la comparación entre el perfil interno y el percibido." },
+          en: { title: "The report", text: "Consistency index, executive summary, profile by dimension and the comparison between the internal and the perceived profile." } },
+      ],
       links: [], // herramienta privada para un cliente
       es: { tag: "Evaluaciones de perfil conductual para selección de personal.", desc: "El candidato responde desde un enlace eligiendo palabras y escribiendo un texto breve. La plataforma calcula su perfil DISC, lo compara con el ideal del puesto y genera un informe en PDF con riesgos y preguntas para la entrevista." },
       en: { tag: "Behavioral profile assessments for hiring.", desc: "Candidates answer from a link by picking words and writing a short text. The platform calculates their DISC profile, compares it with the role's ideal and produces a PDF report with risks and interview questions." } },
@@ -261,13 +306,27 @@ const PROFILE = {
       en: { tag: "CHP's team console.", desc: "CHP's team console: platform health, access, pending work and approvals from the iPhone." } },
     { id: "ibd-logistics", since: "2026-10-28", wide: true, name: "IBD Logistics", platforms: ["web"], icon: "img/icons/ibd-logistics.svg",
       stack: ["React", "TypeScript", "Vite", "Supabase"],
-      imgs: ["img/ibd-logistics-1.webp", "img/ibd-logistics-2.webp"],
+      shots: [
+        { src: "img/ibd-logistics-1.webp",
+          es: { title: "La portada", text: "De origen a destino: la propuesta, los botones para cotizar y ver servicios, el sello de monitoreo 24/7 y las cifras de la operación." },
+          en: { title: "The home page", text: "Door to door: the pitch, the buttons to get a quote and see services, the 24/7 monitoring seal and the operation's numbers." } },
+        { src: "img/ibd-logistics-2.webp",
+          es: { title: "Cobertura", text: "Los corredores que opera, de Guadalajara y el Bajío a la Ciudad de México, Monterrey y la frontera, en un esquema ilustrativo." },
+          en: { title: "Coverage", text: "The corridors it runs, from Guadalajara and the Bajío to Mexico City, Monterrey and the border, in an illustrative map." } },
+      ],
       links: [], // aún sin publicar
       es: { tag: "Transporte terrestre de carga, de origen a destino.", desc: "El sitio de IBD Logistics: servicio dedicado, carga consolidada, contenedores y viajes spot, monitoreo 24/7, cobertura nacional y formularios de cotización y bolsa de trabajo." },
       en: { tag: "Freight trucking, door to door.", desc: "IBD Logistics' website: dedicated service, consolidated loads, containers and spot trips, 24/7 monitoring, nationwide coverage, and quote and job application forms." } },
     { id: "tortracs", since: "2025-09", wide: true, name: "Tortracs.net", platforms: ["web"], icon: "img/icons/tortracs.svg",
       stack: ["React", "TypeScript", "Vite"],
-      imgs: ["img/tortracs-1.webp", "img/tortracs-2.webp"],
+      shots: [
+        { src: "img/tortracs-1.webp",
+          es: { title: "La portada", text: "Transporte terrestre en México con más de 10 años de operación y un botón directo para cotizar." },
+          en: { title: "The home page", text: "Freight trucking in Mexico with more than 10 years in operation and a direct button to get a quote." } },
+        { src: "img/tortracs-2.webp",
+          es: { title: "Servicios", text: "Servicio dedicado, viajes spot, transporte de contenedores y carga consolidada, cada uno con para quién es." },
+          en: { title: "Services", text: "Dedicated service, spot trips, container transport and consolidated loads, each with who it's for." } },
+      ],
       links: [{ type: "web", url: "https://tortracs.net" }],
       es: { tag: "Transporte de carga por México.", desc: "El sitio de TORTRACS, empresa de transporte terrestre de carga en México: servicio dedicado, carga consolidada, viajes spot y rastreo GPS." },
       en: { tag: "Freight trucking across Mexico.", desc: "The website of TORTRACS, a freight trucking company in Mexico: dedicated service, consolidated loads, spot trips and GPS tracking." } },
@@ -296,7 +355,14 @@ const PROFILE = {
       ] },
     { id: "presupuesto-anual", since: "2026-09", wide: true, name: "Presupuesto Anual", platforms: ["sheets"],
       stack: ["Excel"],
-      imgs: ["img/presupuesto-anual-1.webp", "img/presupuesto-anual-2.webp"],
+      shots: [
+        { src: "img/presupuesto-anual-1.webp",
+          es: { title: "La guía", text: "La primera hoja explica qué hace el libro, qué celdas se capturan y qué va en cada paso, de los supuestos a los gastos." },
+          en: { title: "The guide", text: "The first sheet explains what the workbook does, which cells you fill in and what goes in each step, from assumptions to expenses." } },
+        { src: "img/presupuesto-anual-2.webp",
+          es: { title: "Captura de ingresos", text: "Un renglón por servicio con su unidad, moneda, tarifa y volumen de cada mes; el ingreso en pesos y el costo directo se calculan solos." },
+          en: { title: "Revenue input", text: "One row per service with its unit, currency, rate and monthly volume; revenue in pesos and direct cost are calculated automatically." } },
+      ],
       links: [{ type: "mail", url: "mailto:contacto@manoloto.com?subject=Plantilla%20Presupuesto%20Anual" }],
       es: { tag: "Plantilla de presupuesto anual para un grupo de empresas.", desc: "Un libro de Excel para presupuestar un año mes a mes, con hasta 7 empresas y un corporativo: ingresos por volumen y tarifa, nómina por puesto, gastos, EBITDA, ISR y PTU estimados y utilidad neta, por empresa o consolidado, en MXN y USD. Trae una hoja de guía que explica cómo usarlo. Si la quieres, pídemela y te la mando gratis por correo." },
       en: { tag: "An annual budget template for a group of companies.", desc: "An Excel workbook to budget a year month by month, for up to 7 companies plus a corporate office: revenue by volume and rate, payroll by position, expenses, EBITDA, estimated taxes and net income, per company or consolidated, in MXN and USD. It includes a guide sheet on how to use it. If you want it, ask me and I'll email it to you for free." } },
@@ -335,7 +401,7 @@ const CONTENT = {
     chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA" },
     filterLabel: "Filtrar por plataforma",
     web: "Abrir web", store: "App Store", play: "Google Play", mail: "Pedirla gratis por correo", github: "Ver en GitHub",
-    agents: "Los agentes", tools: "Herramientas", enforce: "Cómo se hace cumplir",
+    agents: "Los agentes", shots: "En pantalla", tools: "Herramientas", enforce: "Cómo se hace cumplir",
     contactTitle: "Escríbeme",
     copy: "Copiar correo", copied: "Copiado", close: "Cerrar",
     featured: "Proyecto principal", madeWith: "Hecho con",
@@ -348,7 +414,7 @@ const CONTENT = {
     chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI" },
     filterLabel: "Filter by platform",
     web: "Open site", store: "App Store", play: "Google Play", mail: "Ask for it free by email", github: "View on GitHub",
-    agents: "The agents", tools: "Tools", enforce: "How it's enforced",
+    agents: "The agents", shots: "On screen", tools: "Tools", enforce: "How it's enforced",
     contactTitle: "Write to me",
     copy: "Copy email", copied: "Copied", close: "Close",
     featured: "Main project", madeWith: "Built with",
@@ -426,9 +492,19 @@ function fillSheet(id) {
       ${p.links.length ? `<div class="links">${p.links.map((l) =>
         `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label || t[l.type])} ↗</a>`).join("")}</div>` : ""}
     </div>
-    ${p.imgs.length ? `<div class="shots">${p.imgs.map((src, i) =>
-      `<img src="${esc(src)}" alt="${esc(nameOf(p))} ${i + 1}" ${p.wide ? 'width="1280" height="800"' : 'width="540" height="1170"'} decoding="async">`).join("")}</div>` : ""}${p.phones ? `<div class="shots phones">${p.phones.map((src, i) =>
-      `<img src="${esc(src)}" alt="${esc(nameOf(p))} iPhone ${i + 1}" width="540" height="1170" decoding="async">`).join("")}</div>` : ""}${p.agents ? `<section class="agents">
+    ${p.imgs?.length ? `<div class="shots">${p.imgs.map((src, i) =>
+      `<img src="${esc(src)}" alt="${esc(nameOf(p))} ${i + 1}" ${p.wide ? 'width="1280" height="800"' : 'width="540" height="1170"'} decoding="async">`).join("")}</div>` : ""}${p.shots ? `<section class="agents">
+      <h3>${esc(t.shots)}</h3>${p.shots.map((s) => `
+      <article class="agent shot">
+        ${s.phones ? `<div class="pair">${s.phones.map((src) =>
+          `<img src="${esc(src)}" alt="${esc(s[lang].title)}" width="540" height="1170" decoding="async">`).join("")}</div>`
+          : `<img src="${esc(s.src)}" alt="${esc(s[lang].title)}" width="1280" height="800" decoding="async">`}
+        <div>
+          <h4>${esc(s[lang].title)}</h4>
+          <p>${esc(s[lang].text)}</p>
+        </div>
+      </article>`).join("")}
+    </section>` : ""}${p.agents ? `<section class="agents">
       <h3>${esc(p[lang].agentsTitle || t.agents)}</h3>${p.agents.map((a) => `
       <article class="agent">
         <img src="${esc(agentImg(p, a))}" alt="${esc(a[lang].alt)}" width="1280" height="800" decoding="async">
@@ -475,7 +551,7 @@ $("copyBtn").addEventListener("click", () => {
 
 /* Precarga de capturas: al pasar sobre una tarjeta y, después, todas en segundo plano */
 const loaded = new Set();
-const preload = (p) => p && [...p.imgs, ...(p.phones || []), ...(p.agents || []).map((a) => agentImg(p, a))].forEach((src) => { if (!loaded.has(src)) { loaded.add(src); new Image().src = src; } });
+const preload = (p) => p && [...(p.imgs || []), ...(p.shots || []).flatMap((s) => s.phones || [s.src]), ...(p.agents || []).map((a) => agentImg(p, a))].forEach((src) => { if (!loaded.has(src)) { loaded.add(src); new Image().src = src; } });
 $("grid").addEventListener("pointerover", (e) => {
   const b = e.target.closest("[data-open]"); if (b) preload(PROFILE.projects.find((x) => x.id === b.dataset.open));
 });
