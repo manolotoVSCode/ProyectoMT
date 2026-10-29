@@ -182,8 +182,8 @@ const PROFILE = {
   github: "https://github.com/manolotoVSCode",
   // stack: lenguajes y herramientas; featured: tarjeta destacada (ocupa dos columnas)
   // since: cuándo empezó (año-mes); los destacados van primero y el resto del más nuevo al más antiguo
-  // platforms: "iphone", "android" o "web" (alimentan los filtros y las cifras)
-  // links: "web", "store" o "play"; si falta el de la App Store, se deja vacío
+  // platforms: "iphone", "android", "web" o "sheets" (alimentan los filtros y las cifras)
+  // links: "web", "store", "play" o "mail"; si falta el de la App Store, se deja vacío
   projects: [
     { id: "chp-web", since: "2026-01", name: "CHP App", platforms: ["web", "iphone"], featured: true, wide: true, icon: "img/icons/chp-app.png",
       stack: ["Python", "Flask", "PostgreSQL", "Supabase", "Bootstrap", "Chart.js", "Swift", "SwiftUI"],
@@ -258,6 +258,12 @@ const PROFILE = {
       links: [{ type: "web", url: "https://tortracs.net" }],
       es: { tag: "Transporte de carga por México.", desc: "El sitio de TORTRACS, empresa de transporte terrestre de carga en México: servicio dedicado, carga consolidada, viajes spot y rastreo GPS." },
       en: { tag: "Freight trucking across Mexico.", desc: "The website of TORTRACS, a freight trucking company in Mexico: dedicated service, consolidated loads, spot trips and GPS tracking." } },
+    { id: "presupuesto-anual", since: "2026-09", wide: true, name: "Presupuesto Anual", platforms: ["sheets"],
+      stack: ["Excel"],
+      imgs: ["img/presupuesto-anual-1.webp", "img/presupuesto-anual-2.webp"],
+      links: [{ type: "mail", url: "mailto:contacto@manoloto.com?subject=Plantilla%20Presupuesto%20Anual" }],
+      es: { tag: "Plantilla de presupuesto anual para un grupo de empresas.", desc: "Un libro de Excel para presupuestar un año mes a mes, con hasta 7 empresas y un corporativo: ingresos por volumen y tarifa, nómina por puesto, gastos, EBITDA, ISR y PTU estimados y utilidad neta, por empresa o consolidado, en MXN y USD. Trae una hoja de guía que explica cómo usarlo. Si la quieres, pídemela y te la mando gratis por correo." },
+      en: { tag: "An annual budget template for a group of companies.", desc: "An Excel workbook to budget a year month by month, for up to 7 companies plus a corporate office: revenue by volume and rate, payroll by position, expenses, EBITDA, estimated taxes and net income, per company or consolidated, in MXN and USD. It includes a guide sheet on how to use it. If you want it, ask me and I'll email it to you for free." } },
     { id: "little-galaxy", since: "2025-01", name: "Little Galaxy", platforms: ["iphone", "web"],
       stack: ["React", "TypeScript", "Capacitor"],
       imgs: ["img/little-galaxy-1.webp", "img/little-galaxy-2.webp"],
@@ -270,11 +276,11 @@ const PROFILE = {
 const CONTENT = {
   es: {
     title: "Apps, webs y otras cosas que hago en mi <em>tiempo libre</em>.",
-    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", web: "sitios web" },
-    filters: { all: "Todo", iphone: "iPhone", android: "Android", web: "Web" },
-    chips: { iphone: "iPhone", android: "Android", web: "Web" },
+    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", web: "sitios web", sheets: "hojas de cálculo" },
+    filters: { all: "Todo", iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo" },
+    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo" },
     filterLabel: "Filtrar por plataforma",
-    web: "Abrir web", store: "App Store", play: "Google Play",
+    web: "Abrir web", store: "App Store", play: "Google Play", mail: "Pedirla gratis por correo",
     contactTitle: "Escríbeme",
     copy: "Copiar correo", copied: "Copiado", close: "Cerrar",
     featured: "Proyecto principal", madeWith: "Hecho con",
@@ -282,11 +288,11 @@ const CONTENT = {
   },
   en: {
     title: "Apps, sites and other things I make in my <em>free time</em>.",
-    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", web: "websites" },
-    filters: { all: "All", iphone: "iPhone", android: "Android", web: "Web" },
-    chips: { iphone: "iPhone", android: "Android", web: "Web" },
+    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", web: "websites", sheets: "spreadsheets" },
+    filters: { all: "All", iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets" },
+    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets" },
     filterLabel: "Filter by platform",
-    web: "Open site", store: "App Store", play: "Google Play",
+    web: "Open site", store: "App Store", play: "Google Play", mail: "Ask for it free by email",
     contactTitle: "Write to me",
     copy: "Copy email", copied: "Copied", close: "Close",
     featured: "Main project", madeWith: "Built with",
@@ -316,11 +322,11 @@ function render() {
   document.documentElement.lang = lang;
   $("title").innerHTML = t.title;
 
-  $("stats").innerHTML = ["all", "iphone", "android", "web"].map((k) =>
+  $("stats").innerHTML = ["all", "iphone", "android", "web", "sheets"].map((k) =>
     `<li><b>${count(k)}</b><span>${esc(t.stats[k])}</span></li>`).join("");
 
   $("filters").setAttribute("aria-label", t.filterLabel);
-  $("filters").innerHTML = ["all", "iphone", "android", "web"].map((k) =>
+  $("filters").innerHTML = ["all", "iphone", "android", "web", "sheets"].map((k) =>
     `<button type="button" id="filter-${k}" data-filter="${k}" aria-pressed="${k === filter}">${esc(t.filters[k])}<small>${count(k)}</small></button>`).join("");
 
   $("grid").innerHTML = ordered()
