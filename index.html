@@ -79,6 +79,14 @@ h1 em { font-style: normal; color: var(--accent); }
   box-shadow: 0 0 0 1px var(--line); transition: transform .25s; }
 .app h2 { font: 700 21px/1.15 var(--display); margin: 0; letter-spacing: -.01em; }
 .app p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.45; }
+.stack { font: 400 12px/1.5 var(--mono); color: var(--muted); padding-top: 8px; }
+.flag { font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+.app.feature { border: 2px solid var(--accent); }
+.app.feature h2 { font-size: 28px; }
+@media (min-width: 760px) { .app.feature { grid-column: span 2; } }
+.made { font: 400 12px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-bottom: -2px; }
+.sheet .chips { margin: 0 0 20px; padding-top: 8px; }
+a.copy { color: var(--ink); text-decoration: none; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 14px; }
 .chips span { font: 400 11px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase;
   border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; color: var(--muted); }
@@ -109,7 +117,8 @@ dialog::backdrop { background: var(--shade); }
   border: 1px solid var(--line); background: var(--card); cursor: pointer; font-size: 18px; line-height: 1; }
 @media (max-width: 640px) {
   .app { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; padding: 16px; }
-  .app .icon { width: 56px; height: 56px; margin: 0; grid-row: span 3; }
+  .app .icon { width: 56px; height: 56px; margin: 0; grid-row: span 5; }
+  .app.feature h2 { font-size: 24px; }
   .app .chips { padding-top: 8px; }
   .sheet { grid-template-columns: minmax(0, 1fr); padding: 24px 20px; }
   .shots img { width: calc(50% - 6px); }
@@ -141,6 +150,7 @@ dialog::backdrop { background: var(--shade); }
       <h2 id="contactTitle"></h2>
       <span class="mail" id="mail"></span>
       <button type="button" class="copy" id="copyBtn"></button>
+      <a class="copy" id="github" target="_blank" rel="noopener">GitHub ↗</a>
     </section>
   </main>
   <p class="foot" id="foot"></p>
@@ -159,60 +169,91 @@ dialog::backdrop { background: var(--shade); }
    ================================================================ */
 const PROFILE = {
   email: "contacto@manoloto.com",
+  github: "https://github.com/manolotoVSCode",
+  // stack: lenguajes y herramientas; featured: tarjeta destacada (ocupa dos columnas)
   // platforms: "iphone", "android" o "web" (alimentan los filtros y las cifras)
   // links: "web" o "store"; si falta el de la App Store, se deja vacío
   projects: [
+    { id: "chp-web", name: "CHP Web", platforms: ["web"], featured: true, icon: "img/icons/chpmex.png",
+      stack: ["Python", "Flask", "PostgreSQL", "Supabase", "Bootstrap", "Chart.js"],
+      imgs: ["img/chp-web-1.jpg", "img/chp-web-2.jpg"],
+      links: [{ type: "web", url: "https://app.chpmex.com" }],
+      es: { tag: "La plataforma de CHP México: energía, cogeneración y contabilidad por planta.", desc: "Mi proyecto más grande. Lee facturas de luz y gas, calcula ahorros y proyecciones de cogeneración, lleva la contabilidad de cada planta y muestra tableros a los clientes. Sobre ella funcionan CHP App y CHP Panel de Control." },
+      en: { tag: "CHP México's platform: energy, cogeneration and per-plant accounting.", desc: "My biggest project. It reads power and gas bills, calculates cogeneration savings and projections, keeps each plant's books and shows dashboards to clients. CHP App and CHP Panel de Control run on top of it." } },
     { id: "savium-finanzas", name: "Savium Finanzas", platforms: ["iphone", "web"],
+      stack: ["React", "TypeScript", "Swift", "SwiftUI", "Supabase"],
       imgs: ["img/savium-finanzas-1.jpg", "img/savium-finanzas-2.jpg"],
       links: [{ type: "store", url: "https://apps.apple.com/app/id6820799492" }, { type: "web", url: "https://savium.manoloto.com" }],
       es: { tag: "Tus finanzas personales en un solo lugar.", desc: "Mis finanzas personales en un solo lugar: cuentas, inversiones, cripto, suscripciones y extractos bancarios." },
       en: { tag: "Your personal finances in one place.", desc: "Personal finance in one place: accounts, investments, crypto, subscriptions and bank statements." } },
     { id: "savium-share", name: "Savium Share", platforms: ["iphone", "android"],
+      stack: ["Swift", "SwiftUI", "Supabase"],
       imgs: ["img/savium-share-1.jpg", "img/savium-share-2.jpg"],
       links: [{ type: "store", url: "https://apps.apple.com/app/id6822409433" }],
       es: { tag: "Divide gastos gratis y sin registrarte.", desc: "Divide gastos con amigos, familia o en viajes. Gratis, sin registrarte y sin límite de gastos ni de grupos. Varias divisas, saldar cuentas con los mínimos pagos y funciona sin conexión." },
       en: { tag: "Split expenses, free and with no sign-up.", desc: "Split expenses with friends, family or on trips. Free, no sign-up and no limits on expenses or groups. Multiple currencies, settle up in the fewest payments, and it works offline." } },
     { id: "savium-rewards", name: "Savium Rewards", platforms: ["iphone"],
+      stack: ["Swift", "SwiftUI", "VisionKit", "Supabase"],
       imgs: ["img/savium-rewards-1.jpg", "img/savium-rewards-2.jpg"],
       links: [], // falta el enlace de la App Store
       es: { tag: "Las tarjetas de lealtad de toda la familia.", desc: "La cartera familiar de tarjetas de lealtad: puntos, millas y monederos con el código listo en caja." },
       en: { tag: "The whole family's loyalty cards.", desc: "A family wallet for loyalty cards: points, miles and store credit with the barcode ready at checkout." } },
     { id: "piggy-bank", name: "Piggy Bank", platforms: ["iphone"],
+      stack: ["Swift", "SwiftUI", "SwiftData", "Supabase"],
       imgs: ["img/piggy-bank-1.jpg", "img/piggy-bank-2.jpg"],
       links: [], // falta el enlace de la App Store
       es: { tag: "Una alcancía para que los niños aprendan a ahorrar.", desc: "La alcancía digital para enseñar a los hijos a manejar dinero: tres frascos, domingo automático, tareas y metas." },
       en: { tag: "A piggy bank that teaches kids to save.", desc: "A digital piggy bank that teaches kids about money: three jars, automatic allowance, chores and goals." } },
     { id: "savium-corporate", name: "Savium Corporate", platforms: ["web"],
+      stack: ["React", "TypeScript", "Tailwind", "Supabase"],
       imgs: ["img/savium-corporate-1.jpg", "img/savium-corporate-2.jpg"],
       links: [{ type: "web", url: "https://saviumcorporate.manoloto.com" }],
       es: { tag: "Las finanzas de una PyME, sin contabilidad.", desc: "Gestión financiera para PyMEs mexicanas: estado de resultados, balance, flujo de caja e índices financieros con semáforos, sin saber de contabilidad." },
       en: { tag: "Small-business finances, no accounting needed.", desc: "Financial management for Mexican small businesses: income statement, balance sheet, cash flow and financial ratios with traffic lights, no accounting knowledge needed." } },
     { id: "savium-condo", name: "Savium Condo", platforms: ["web"],
+      stack: ["React", "TypeScript", "Tailwind", "Supabase"],
       imgs: ["img/savium-condo-1.jpg", "img/savium-condo-2.jpg"],
       links: [], // sin web pública todavía
       es: { tag: "La administración de un condominio.", desc: "Administración de condominios: cuotas y pagos de cada propietario, gastos y proveedores, fondos, morosidad por unidad e informes del mes." },
       en: { tag: "Running a condominium.", desc: "Condominium management: each owner's fees and payments, expenses and suppliers, funds, overdue units and monthly reports." } },
+    { id: "pda", name: "PDA", platforms: ["web"],
+      stack: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Tailwind"],
+      imgs: ["img/pda-1.jpg", "img/pda-2.jpg"],
+      links: [], // herramienta privada para un cliente
+      es: { tag: "Evaluaciones de perfil conductual para selección de personal.", desc: "El candidato responde desde un enlace eligiendo palabras y escribiendo un texto breve. La plataforma calcula su perfil DISC, lo compara con el ideal del puesto y genera un informe en PDF con riesgos y preguntas para la entrevista." },
+      en: { tag: "Behavioral profile assessments for hiring.", desc: "Candidates answer from a link by picking words and writing a short text. The platform calculates their DISC profile, compares it with the role's ideal and produces a PDF report with risks and interview questions." } },
     { id: "chp-app", name: "CHP App", platforms: ["iphone"],
+      stack: ["Swift", "SwiftUI"],
       imgs: ["img/chp-app-1.jpg", "img/chp-app-2.jpg"],
-      links: [{ type: "web", url: "https://app.chpmex.com" }], // falta el enlace de la App Store
+      links: [], // falta el enlace de la App Store
       es: { tag: "Facturas de energía y ahorro por cogeneración.", desc: "Analiza facturas de luz y gas y calcula el ahorro y EBITDA de un proyecto de cogeneración." },
       en: { tag: "Energy bills and cogeneration savings.", desc: "Reads power and gas bills and calculates the savings and EBITDA of a cogeneration project." } },
-    { id: "chp-panel", name: "CHP Panel de Control", platforms: ["iphone", "web"],
+    { id: "chp-panel", name: "CHP Panel de Control", platforms: ["iphone"],
+      stack: ["Swift", "SwiftUI"],
       imgs: ["img/chp-panel-1.jpg", "img/chp-panel-2.jpg"],
-      links: [{ type: "store", url: "https://apps.apple.com/us/app/chp-app-panel-de-control/id6819522675" }, { type: "web", url: "https://app.chpmex.com" }],
+      links: [{ type: "store", url: "https://apps.apple.com/us/app/chp-app-panel-de-control/id6819522675" }],
       es: { tag: "La consola del equipo de CHP.", desc: "El panel del equipo de CHP: salud de la plataforma, accesos, pendientes y aprobaciones desde el iPhone." },
       en: { tag: "CHP's team console.", desc: "CHP's team console: platform health, access, pending work and approvals from the iPhone." } },
     { id: "chpmex", name: "CHPMex.com", platforms: ["web"],
+      stack: ["HTML", "CSS", "JavaScript"],
       imgs: ["img/chpmex-1.jpg", "img/chpmex-2.jpg"],
       links: [{ type: "web", url: "https://chpmex.com" }],
       es: { tag: "Cogeneración para la industria.", desc: "El sitio de CHP México: cogeneración y eficiencia energética para la industria." },
       en: { tag: "Cogeneration for industry.", desc: "CHP México's website: cogeneration and energy efficiency for industry." } },
+    { id: "ibd-logistics", name: "IBD Logistics", platforms: ["web"], icon: "img/icons/ibd-logistics.svg",
+      stack: ["React", "TypeScript", "Vite", "Supabase"],
+      imgs: ["img/ibd-logistics-1.jpg", "img/ibd-logistics-2.jpg"],
+      links: [], // aún sin publicar
+      es: { tag: "Transporte terrestre de carga, de origen a destino.", desc: "El sitio de IBD Logistics: servicio dedicado, carga consolidada, contenedores y viajes spot, monitoreo 24/7, cobertura nacional y formularios de cotización y bolsa de trabajo." },
+      en: { tag: "Freight trucking, door to door.", desc: "IBD Logistics' website: dedicated service, consolidated loads, containers and spot trips, 24/7 monitoring, nationwide coverage, and quote and job application forms." } },
     { id: "tortracs", name: "Tortracs.net", platforms: ["web"], icon: "img/icons/tortracs.svg",
+      stack: ["React", "TypeScript", "Vite"],
       imgs: ["img/tortracs-1.jpg", "img/tortracs-2.jpg"],
       links: [{ type: "web", url: "https://tortracs.net" }],
       es: { tag: "Transporte de carga por México.", desc: "El sitio de TORTRACS, empresa de transporte terrestre de carga en México: servicio dedicado, carga consolidada, viajes spot y rastreo GPS." },
       en: { tag: "Freight trucking across Mexico.", desc: "The website of TORTRACS, a freight trucking company in Mexico: dedicated service, consolidated loads, spot trips and GPS tracking." } },
     { id: "little-galaxy", name: "Little Galaxy", platforms: ["iphone", "web"],
+      stack: ["React", "TypeScript", "Capacitor"],
       imgs: ["img/little-galaxy-1.jpg", "img/little-galaxy-2.jpg"],
       links: [{ type: "store", url: "https://apps.apple.com/app/id6760791741" }, { type: "web", url: "https://littlegalaxy.org" }],
       es: { tag: "Un patio de juegos espacial para peques.", desc: "Un patio de juegos espacial y gratuito para niños pequeños: tocan para crear planetas, estrellas fugaces y constelaciones." },
@@ -230,7 +271,8 @@ const CONTENT = {
     web: "Abrir web", store: "App Store",
     contactTitle: "Escríbeme",
     copy: "Copiar correo", copied: "Copiado", close: "Cerrar",
-    foot: "Proyecto personal de Manuel de la Torre (MT)",
+    featured: "Proyecto principal", madeWith: "Hecho con",
+    foot: "Proyecto personal MT",
   },
   en: {
     title: "Apps and sites I make in my <em>free time</em>.",
@@ -241,7 +283,8 @@ const CONTENT = {
     web: "Open site", store: "App Store",
     contactTitle: "Write to me",
     copy: "Copy email", copied: "Copied", close: "Close",
-    foot: "Personal project by Manuel de la Torre (MT)",
+    featured: "Main project", madeWith: "Built with",
+    foot: "MT personal project",
   },
 };
 /* ================================================================ */
@@ -273,16 +316,19 @@ function render() {
 
   $("grid").innerHTML = PROFILE.projects
     .filter((p) => filter === "all" || p.platforms.includes(filter))
-    .map((p) => `<button type="button" class="app" data-open="${p.id}">
+    .map((p) => `<button type="button" class="app${p.featured ? " feature" : ""}" data-open="${p.id}">
       <img class="icon" src="${icon(p)}" alt="" width="64" height="64">
+      ${p.featured ? `<span class="flag">${esc(t.featured)}</span>` : ""}
       <h2>${esc(p.name)}</h2>
       <p>${esc(p[lang].tag)}</p>
       <div class="chips">${p.platforms.map((pf) => `<span>${esc(t.chips[pf])}</span>`).join("")}</div>
+      <div class="stack">${p.stack.map(esc).join(" · ")}</div>
     </button>`).join("");
 
   $("contactTitle").textContent = t.contactTitle;
   $("mail").textContent = PROFILE.email;
   $("copyBtn").textContent = t.copy;
+  $("github").href = PROFILE.github;
   $("sheetClose").setAttribute("aria-label", t.close);
   $("foot").textContent = `© ${new Date().getFullYear()} · ${t.foot}`;
   document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
@@ -299,6 +345,8 @@ function fillSheet(id) {
       <div class="kind">${esc(kind)}</div>
       <h2>${esc(p.name)}</h2>
       <p>${esc(p[lang].desc)}</p>
+      <div class="made">${esc(t.madeWith)}</div>
+      <div class="chips">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
       ${p.links.length ? `<div class="links">${p.links.map((l) =>
         `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(t[l.type])} ↗</a>`).join("")}</div>` : ""}
     </div>
