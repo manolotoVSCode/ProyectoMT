@@ -120,6 +120,17 @@ dialog::backdrop { background: var(--shade); }
 .sheet.wide .shots img { width: 100%; border-radius: 12px; margin: 0; }
 .sheet.wide .shots.phones { flex-direction: row; justify-content: center; }
 .sheet.wide .shots.phones img { width: min(220px, calc(50% - 8px)); border-radius: 18px; }
+/* Agentes: un diagrama por agente, con su papel y cómo se hace cumplir */
+.agents { display: flex; flex-direction: column; gap: 28px; }
+.agents h3 { font: 700 22px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
+.agent { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 20px; align-items: center;
+  border-top: 1px solid var(--line); padding-top: 24px; }
+.agent img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); display: block; }
+.agent h4 { font: 500 17px/1.2 var(--mono); margin: 0 0 6px; }
+.sheet .agent p { margin: 0 0 12px; color: var(--ink); max-width: none; }
+.sheet .agent .chips { margin: 0 0 12px; padding-top: 0; }
+.sheet .agent .enforce { color: var(--muted); font-size: 14.5px; margin: 0; }
+.enforce b { display: block; font: 400 12px var(--mono); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 2px; }
 .close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%;
   border: 1px solid var(--line); background: var(--card); cursor: pointer; font-size: 18px; line-height: 1; }
 @media (max-width: 640px) {
@@ -131,6 +142,7 @@ dialog::backdrop { background: var(--shade); }
   .shots img { width: calc(50% - 6px); }
   .sheet.wide .shots img { width: 100%; }
   .sheet.wide .shots.phones img { width: calc(50% - 8px); }
+  .agent { grid-template-columns: minmax(0, 1fr); gap: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .app, .icon { transition: none; }
@@ -181,8 +193,9 @@ const PROFILE = {
   github: "https://github.com/manolotoVSCode",
   // stack: lenguajes y herramientas; featured: tarjeta destacada (ocupa dos columnas)
   // since: cuándo empezó (año-mes); los destacados van primero y el resto del más nuevo al más antiguo
-  // platforms: "iphone", "android", "web" o "sheets" (alimentan los filtros y las cifras)
-  // links: "web", "store", "play" o "mail"; si falta el de la App Store, se deja vacío
+  // platforms: "iphone", "android", "web", "sheets" o "ia" (alimentan los filtros y las cifras)
+  // links: "web", "store", "play", "mail" o "github"; si falta el de la App Store, se deja vacío
+  // es.name / en.name: nombre por idioma, si cambia; agents: lista opcional de agentes con su diagrama
   projects: [
     { id: "chp-web", since: "2026-01", name: "CHP App", platforms: ["web", "iphone"], featured: true, wide: true, icon: "img/icons/chp-app.png",
       stack: ["Python", "Flask", "PostgreSQL", "Supabase", "Bootstrap", "Chart.js", "Swift", "SwiftUI"],
@@ -257,6 +270,29 @@ const PROFILE = {
       links: [{ type: "web", url: "https://tortracs.net" }],
       es: { tag: "Transporte de carga por México.", desc: "El sitio de TORTRACS, empresa de transporte terrestre de carga en México: servicio dedicado, carga consolidada, viajes spot y rastreo GPS." },
       en: { tag: "Freight trucking across Mexico.", desc: "The website of TORTRACS, a freight trucking company in Mexico: dedicated service, consolidated loads, spot trips and GPS tracking." } },
+    { id: "agentes-claude-code", since: "2026-09", wide: true, name: "Agentes para Claude Code", platforms: ["ia"], icon: "img/icons/agentes-claude-code.svg",
+      stack: ["Claude Code", "Bash", "Python"],
+      imgs: [], // cada agente lleva su propio diagrama, en es y en
+      links: [{ type: "github", url: "https://github.com/manolotoVSCode/claude-code-agents" }],
+      es: { tag: "Un equipo de agentes de Claude Code que revisa, prueba y frena lo irreversible.", desc: "Cinco agentes especializados para Claude Code que uso en mis proyectos: un revisor que lee los cambios sin tocarlos, un ejecutor de pruebas limitado a una lista cerrada de comandos, un auditor de secretos y dependencias, un explorador de solo lectura y un guardián que exige aprobación antes de escribir en la base de datos o hacer merge a la rama principal. Las restricciones no dependen solo del texto de cada agente: tres tienen un hook que bloquea los comandos fuera de su lista, el guardián se apoya en dos hooks que deniegan la acción sin aprobación y el revisor no tiene herramientas para escribir ni ejecutar. Son un freno, no un entorno aislado. El repositorio público trae las versiones genéricas, sus pruebas y sus límites." },
+      en: { name: "Agents for Claude Code", tag: "A team of Claude Code agents that reviews, tests and stops the irreversible.", desc: "Five specialized Claude Code agents I use in my projects: a reviewer that reads changes without touching them, a test runner limited to a closed list of commands, a secrets and dependency auditor, a read-only explorer and a guardian that requires approval before any database write or merge to the main branch. The restrictions don't rely on each agent's prompt alone: three have a hook that blocks commands outside their list, the guardian relies on two hooks that deny the action without an approval, and the reviewer has no tools to write or run anything. They're a brake, not a sandbox. The public repository has the generic versions, their tests and their limits." },
+      agents: [
+        { id: "guardian", name: "guardian", tools: ["Read", "Grep", "Glob", "Bash", "Write", "MCP"],
+          es: { role: "Detiene el SQL de escritura y los merges a la rama principal hasta que existe una aprobación de un solo uso, ligada al SQL exacto o al PR.", enforce: "Dos hooks registrados en la configuración del proyecto deniegan la acción sin aprobación; el SQL destructivo exige además una aprobación humana. Que solo el guardián escriba las aprobaciones depende de su texto.", alt: "Diagrama del guardián: el hook bloquea el SQL o el merge sin aprobación, el guardián lo ensaya y escribe una aprobación de un solo uso, y el reintento pasa una vez." },
+          en: { role: "Stops every write SQL and every merge to the main branch until a one-use approval exists, bound to the exact SQL or PR.", enforce: "Two hooks registered in the project settings deny the action without an approval; destructive SQL also needs human approval. That only the guardian writes approvals relies on its prompt.", alt: "Guardian diagram: the hook blocks SQL or a merge without an approval, the guardian dry-runs it and writes a one-use approval, and the retry passes once." } },
+        { id: "code-reviewer", name: "code-reviewer", tools: ["Read", "Grep", "Glob"],
+          es: { role: "Revisa cambios en solo lectura y devuelve hallazgos con severidad y ruta:línea, sin corregir nada.", enforce: "No tiene Bash, Write ni Edit: solo puede leer.", alt: "Diagrama del revisor: recibe rutas o un diff, solo puede leer y devuelve hallazgos con severidad y un veredicto." },
+          en: { role: "Reviews changes read-only and returns findings with severity and file:line, fixing nothing.", enforce: "It has no Bash, Write or Edit: it can only read.", alt: "Reviewer diagram: it receives paths or a diff, can only read, and returns findings with severity and a verdict." } },
+        { id: "test-runner", name: "test-runner", tools: ["Read", "Grep", "Glob", "Bash", "Write", "Edit"],
+          es: { role: "Escribe y corre pruebas con pytest y reporta cada fallo con su causa probable.", enforce: "Un hook bloquea en Bash todo lo que no sea pytest, pip list o pip check. Que solo escriba tests depende de su texto.", alt: "Diagrama del ejecutor de pruebas: la lista cerrada de comandos que deja pasar el hook y el reporte con resultados y fallos." },
+          en: { role: "Writes and runs pytest tests and reports each failure with its likely cause.", enforce: "A hook blocks anything in Bash other than pytest, pip list or pip check. That it only writes tests relies on its prompt.", alt: "Test runner diagram: the closed list of commands the hook lets through and the report with results and failures." } },
+        { id: "security-auditor", name: "security-auditor", tools: ["Read", "Grep", "Glob", "Bash"],
+          es: { role: "Busca secretos expuestos y dependencias desactualizadas, y nunca cita un secreto completo.", enforce: "Un hook limita Bash a comandos de lectura y a pip list, y bloquea las herramientas de red; no tiene Write ni Edit.", alt: "Diagrama del auditor de seguridad: revisa archivos de configuración y el historial de git, el hook solo deja pasar lectura, y el reporte muestra los secretos recortados." },
+          en: { role: "Looks for exposed secrets and outdated dependencies, and never quotes a full secret.", enforce: "A hook limits Bash to read-only commands and pip list, and blocks network tools; it has no Write or Edit.", alt: "Security auditor diagram: it checks configuration files and git history, the hook only lets reads through, and the report shows truncated secrets." } },
+        { id: "explorer", name: "explorer", tools: ["Read", "Grep", "Glob", "Bash"],
+          es: { role: "Responde preguntas sobre el código, la documentación y el historial de git en solo lectura, citando la evidencia.", enforce: "Un hook limita Bash a comandos de lectura; no tiene Write ni Edit.", alt: "Diagrama del explorador: una pregunta, los comandos de lectura que deja pasar el hook y la respuesta con ruta:línea y commit." },
+          en: { role: "Answers questions about code, docs and git history read-only, citing its evidence.", enforce: "A hook limits Bash to read-only commands; it has no Write or Edit.", alt: "Explorer diagram: a question, the read-only commands the hook lets through, and the answer with file:line and commit." } },
+      ] },
     { id: "presupuesto-anual", since: "2026-09", wide: true, name: "Presupuesto Anual", platforms: ["sheets"],
       stack: ["Excel"],
       imgs: ["img/presupuesto-anual-1.webp", "img/presupuesto-anual-2.webp"],
@@ -275,11 +311,12 @@ const PROFILE = {
 const CONTENT = {
   es: {
     title: "Apps, webs y otras cosas que hago en mi <em>tiempo libre</em>.",
-    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", web: "sitios web", sheets: "hojas de cálculo" },
-    filters: { all: "Todo", iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo" },
-    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo" },
+    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", web: "sitios web", sheets: "hojas de cálculo", ia: "herramientas de IA" },
+    filters: { all: "Todo", iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA" },
+    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA" },
     filterLabel: "Filtrar por plataforma",
-    web: "Abrir web", store: "App Store", play: "Google Play", mail: "Pedirla gratis por correo",
+    web: "Abrir web", store: "App Store", play: "Google Play", mail: "Pedirla gratis por correo", github: "Ver en GitHub",
+    agents: "Los agentes", tools: "Herramientas", enforce: "Cómo se hace cumplir",
     contactTitle: "Escríbeme",
     copy: "Copiar correo", copied: "Copiado", close: "Cerrar",
     featured: "Proyecto principal", madeWith: "Hecho con",
@@ -287,11 +324,12 @@ const CONTENT = {
   },
   en: {
     title: "Apps, sites and other things I make in my <em>free time</em>.",
-    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", web: "websites", sheets: "spreadsheets" },
-    filters: { all: "All", iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets" },
-    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets" },
+    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", web: "websites", sheets: "spreadsheets", ia: "AI tools" },
+    filters: { all: "All", iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI" },
+    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI" },
     filterLabel: "Filter by platform",
-    web: "Open site", store: "App Store", play: "Google Play", mail: "Ask for it free by email",
+    web: "Open site", store: "App Store", play: "Google Play", mail: "Ask for it free by email", github: "View on GitHub",
+    agents: "The agents", tools: "Tools", enforce: "How it's enforced",
     contactTitle: "Write to me",
     copy: "Copy email", copied: "Copied", close: "Close",
     featured: "Main project", madeWith: "Built with",
@@ -308,6 +346,9 @@ const store = {
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const count = (pf) => pf === "all" ? PROFILE.projects.length : PROFILE.projects.filter((p) => p.platforms.includes(pf)).length;
 const icon = (p) => p.icon || `img/icons/${p.id}.png`;
+const nameOf = (p) => p[lang].name || p.name;
+const agentImg = (a) => `img/agentes/${a.id}-${lang}.webp`;
+const PLATFORMS = ["all", "iphone", "android", "web", "sheets", "ia"];
 
 let lang = store.get("lang") === "en" ? "en" : "es";
 let filter = "all";
@@ -321,11 +362,11 @@ function render() {
   document.documentElement.lang = lang;
   $("title").innerHTML = t.title;
 
-  $("stats").innerHTML = ["all", "iphone", "android", "web", "sheets"].map((k) =>
+  $("stats").innerHTML = PLATFORMS.map((k) =>
     `<li><b>${count(k)}</b><span>${esc(t.stats[k])}</span></li>`).join("");
 
   $("filters").setAttribute("aria-label", t.filterLabel);
-  $("filters").innerHTML = ["all", "iphone", "android", "web", "sheets"].map((k) =>
+  $("filters").innerHTML = PLATFORMS.map((k) =>
     `<button type="button" id="filter-${k}" data-filter="${k}" aria-pressed="${k === filter}">${esc(t.filters[k])}</button>`).join("");
 
   $("grid").innerHTML = ordered()
@@ -333,7 +374,7 @@ function render() {
     .map((p) => `<button type="button" class="app${p.featured ? " feature" : ""}" data-open="${p.id}">
       <img class="icon" src="${icon(p)}" alt="" width="64" height="64">
       ${p.featured ? `<span class="flag">${esc(t.featured)}</span>` : ""}
-      <h2>${esc(p.name)}</h2>
+      <h2>${esc(nameOf(p))}</h2>
       <p>${esc(p[lang].tag)}</p>
       <div class="chips">${p.platforms.map((pf) => `<span>${esc(t.chips[pf])}</span>`).join("")}</div>
       <div class="stack">${p.stack.map(esc).join(" · ")}</div>
@@ -359,16 +400,27 @@ function fillSheet(id) {
   $("sheetBody").innerHTML = `<div>
       <img class="icon" src="${icon(p)}" alt="" width="72" height="72">
       <div class="kind">${esc(kind)}</div>
-      <h2>${esc(p.name)}</h2>
+      <h2>${esc(nameOf(p))}</h2>
       <p>${esc(p[lang].desc)}</p>
       <div class="made">${esc(t.madeWith)}</div>
       <div class="chips">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
       ${p.links.length ? `<div class="links">${p.links.map((l) =>
         `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label || t[l.type])} ↗</a>`).join("")}</div>` : ""}
     </div>
-    <div class="shots">${p.imgs.map((src, i) =>
-      `<img src="${esc(src)}" alt="${esc(p.name)} ${i + 1}" ${p.wide ? 'width="1280" height="800"' : 'width="540" height="1170"'} decoding="async">`).join("")}</div>${p.phones ? `<div class="shots phones">${p.phones.map((src, i) =>
-      `<img src="${esc(src)}" alt="${esc(p.name)} iPhone ${i + 1}" width="540" height="1170" decoding="async">`).join("")}</div>` : ""}`;
+    ${p.imgs.length ? `<div class="shots">${p.imgs.map((src, i) =>
+      `<img src="${esc(src)}" alt="${esc(nameOf(p))} ${i + 1}" ${p.wide ? 'width="1280" height="800"' : 'width="540" height="1170"'} decoding="async">`).join("")}</div>` : ""}${p.phones ? `<div class="shots phones">${p.phones.map((src, i) =>
+      `<img src="${esc(src)}" alt="${esc(nameOf(p))} iPhone ${i + 1}" width="540" height="1170" decoding="async">`).join("")}</div>` : ""}${p.agents ? `<section class="agents">
+      <h3>${esc(t.agents)}</h3>${p.agents.map((a) => `
+      <article class="agent">
+        <img src="${esc(agentImg(a))}" alt="${esc(a[lang].alt)}" width="1280" height="800" decoding="async">
+        <div>
+          <h4>${esc(a.name)}</h4>
+          <p>${esc(a[lang].role)}</p>
+          <div class="chips" aria-label="${esc(t.tools)}">${a.tools.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
+          <p class="enforce"><b>${esc(t.enforce)}</b>${esc(a[lang].enforce)}</p>
+        </div>
+      </article>`).join("")}
+    </section>` : ""}`;
   return true;
 }
 
@@ -404,7 +456,7 @@ $("copyBtn").addEventListener("click", () => {
 
 /* Precarga de capturas: al pasar sobre una tarjeta y, después, todas en segundo plano */
 const loaded = new Set();
-const preload = (p) => p && [...p.imgs, ...(p.phones || [])].forEach((src) => { if (!loaded.has(src)) { loaded.add(src); new Image().src = src; } });
+const preload = (p) => p && [...p.imgs, ...(p.phones || []), ...(p.agents || []).map(agentImg)].forEach((src) => { if (!loaded.has(src)) { loaded.add(src); new Image().src = src; } });
 $("grid").addEventListener("pointerover", (e) => {
   const b = e.target.closest("[data-open]"); if (b) preload(PROFILE.projects.find((x) => x.id === b.dataset.open));
 });
