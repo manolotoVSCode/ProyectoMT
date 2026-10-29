@@ -122,6 +122,8 @@ dialog::backdrop { background: var(--shade); }
 .agent.shot h4 { font: 700 19px/1.2 var(--display); letter-spacing: -.01em; }
 .shot .pair { display: flex; justify-content: center; gap: 12px; }
 .agent .pair img { width: min(160px, calc(50% - 6px)); border-radius: 18px; }
+.agent.tall { grid-template-columns: 200px minmax(0, 1fr); gap: 28px; }
+.agent.tall img { border-radius: 18px; }
 /* Agentes: un diagrama por agente, con su papel y cómo se hace cumplir */
 .agents { display: flex; flex-direction: column; gap: 28px; }
 .agents h3 { font: 700 22px/1.2 var(--display); letter-spacing: -.01em; margin: 0; }
@@ -144,6 +146,7 @@ dialog::backdrop { background: var(--shade); }
   .shots img { width: calc(50% - 6px); }
   .sheet.wide .shots img { width: 100%; }
   .agent { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .agent.tall { grid-template-columns: 120px minmax(0, 1fr); gap: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .app, .icon { transition: none; }
@@ -197,7 +200,7 @@ const PROFILE = {
   // platforms: "iphone", "android", "web", "sheets" o "ia" (alimentan los filtros y las cifras)
   // links: "web", "store", "play", "mail" o "github"; si falta el de la App Store, se deja vacío
   // es.name / en.name: nombre por idioma, si cambia; agents: lista opcional de agentes con su diagrama
-  // shots (webs): en lugar de imgs, cada captura con su título y explicación; { phones: [...] } junta dos del iPhone en una fila
+  // shots (webs): en lugar de imgs, cada captura con su título y explicación; { phones: [...] } junta dos del iPhone en una fila y { phone } pone una sola
   // agentsDir: carpeta de esos diagramas (por omisión img/agentes); es.agentsTitle / en.agentsTitle: título de la sección, si cambia
   projects: [
     { id: "chp-web", since: "2026-01", name: "CHP App", platforms: ["web", "iphone"], featured: true, wide: true, icon: "img/icons/chp-app.png",
@@ -222,9 +225,22 @@ const PROFILE = {
       links: [{ type: "web", url: "https://app.chpmex.com", label: "app.chpmex.com" }, { type: "web", url: "https://chpmex.com", label: "chpmex.com" }],
       es: { tag: "La plataforma de CHP México: energía, cogeneración y contabilidad por planta.", desc: "Mi proyecto más grande. La plataforma lee facturas de luz y gas, calcula ahorros y proyecciones de cogeneración, lleva la contabilidad de cada planta y muestra tableros a los clientes, en la web y en el iPhone. Incluye el sitio público chpmex.com y sobre ella funciona también CHP Panel de Control." },
       en: { tag: "CHP México's platform: energy, cogeneration and per-plant accounting.", desc: "My biggest project. The platform reads power and gas bills, calculates cogeneration savings and projections, keeps each plant's books and shows dashboards to clients, on the web and on the iPhone. It includes the public site chpmex.com, and CHP Panel de Control also runs on top of it." } },
-    { id: "savium-finanzas", since: "2025-07", name: "Savium Finanzas", platforms: ["iphone", "web"], featured: true,
+    { id: "savium-finanzas", since: "2025-07", name: "Savium Finanzas", platforms: ["iphone", "web"], featured: true, wide: true,
       stack: ["React", "TypeScript", "Swift", "SwiftUI", "Supabase"],
-      imgs: ["img/savium-finanzas-1.webp", "img/savium-finanzas-2.webp"],
+      shots: [ // capturas de la App Store, con datos de ejemplo
+        { phone: "img/savium-finanzas-1.webp",
+          es: { title: "Resumen", text: "El patrimonio neto con sus activos y pasivos, lo que necesita atención, como un reembolso vencido, y los ingresos, gastos y balance del mes anterior." },
+          en: { title: "Summary", text: "Net worth with its assets and liabilities, whatever needs attention, like an overdue reimbursement, and last month's income, expenses and balance." } },
+        { phone: "img/savium-finanzas-2.webp",
+          es: { title: "Patrimonio", text: "Cómo se reparte lo que tienes entre efectivo, inversiones y bienes raíces, y lo que debes en tarjetas e hipoteca, cuenta por cuenta." },
+          en: { title: "Net worth", text: "How what you own splits between cash, investments and real estate, and what you owe on cards and mortgage, account by account." } },
+        { phone: "img/savium-finanzas-3.webp",
+          es: { title: "Pendientes", text: "Lo que te deben y lo que debes pagar, con su fecha; lo vencido aparece en rojo y avisa desde la pestaña." },
+          en: { title: "Pending", text: "What you're owed and what you need to pay, with its date; anything overdue shows in red and flags the tab." } },
+        { phone: "img/savium-finanzas-4.webp",
+          es: { title: "Suscripciones", text: "Las suscripciones activas con su monto, frecuencia y cuándo vuelven a cobrarse, y el total mensual." },
+          en: { title: "Subscriptions", text: "Active subscriptions with their amount, frequency and next charge, plus the monthly total." } },
+      ],
       links: [{ type: "store", url: "https://apps.apple.com/app/id6820799492" }, { type: "web", url: "https://savium.manoloto.com" }],
       es: { tag: "Tus finanzas personales en un solo lugar.", desc: "Mis finanzas personales en un solo lugar: cuentas, inversiones, cripto, suscripciones y extractos bancarios." },
       en: { tag: "Your personal finances in one place.", desc: "Personal finance in one place: accounts, investments, crypto, subscriptions and bank statements." } },
@@ -495,9 +511,10 @@ function fillSheet(id) {
     ${p.imgs?.length ? `<div class="shots">${p.imgs.map((src, i) =>
       `<img src="${esc(src)}" alt="${esc(nameOf(p))} ${i + 1}" ${p.wide ? 'width="1280" height="800"' : 'width="540" height="1170"'} decoding="async">`).join("")}</div>` : ""}${p.shots ? `<section class="agents">
       <h3>${esc(t.shots)}</h3>${p.shots.map((s) => `
-      <article class="agent shot">
+      <article class="agent shot${s.phone ? " tall" : ""}">
         ${s.phones ? `<div class="pair">${s.phones.map((src) =>
           `<img src="${esc(src)}" alt="${esc(s[lang].title)}" width="540" height="1170" decoding="async">`).join("")}</div>`
+          : s.phone ? `<img src="${esc(s.phone)}" alt="${esc(s[lang].title)}" width="540" height="1174" decoding="async">`
           : `<img src="${esc(s.src)}" alt="${esc(s[lang].title)}" width="1280" height="800" decoding="async">`}
         <div>
           <h4>${esc(s[lang].title)}</h4>
@@ -551,7 +568,7 @@ $("copyBtn").addEventListener("click", () => {
 
 /* Precarga de capturas: al pasar sobre una tarjeta y, después, todas en segundo plano */
 const loaded = new Set();
-const preload = (p) => p && [...(p.imgs || []), ...(p.shots || []).flatMap((s) => s.phones || [s.src]), ...(p.agents || []).map((a) => agentImg(p, a))].forEach((src) => { if (!loaded.has(src)) { loaded.add(src); new Image().src = src; } });
+const preload = (p) => p && [...(p.imgs || []), ...(p.shots || []).flatMap((s) => s.phones || [s.phone || s.src]), ...(p.agents || []).map((a) => agentImg(p, a))].forEach((src) => { if (!loaded.has(src)) { loaded.add(src); new Image().src = src; } });
 $("grid").addEventListener("pointerover", (e) => {
   const b = e.target.closest("[data-open]"); if (b) preload(PROFILE.projects.find((x) => x.id === b.dataset.open));
 });
