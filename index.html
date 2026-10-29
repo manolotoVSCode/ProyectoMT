@@ -181,7 +181,7 @@ const PROFILE = {
   email: "contacto@manoloto.com",
   github: "https://github.com/manolotoVSCode",
   // stack: lenguajes y herramientas; featured: tarjeta destacada (ocupa dos columnas)
-  // since: cuándo empezó (año-mes); los destacados van primero y el resto del más antiguo al más nuevo
+  // since: cuándo empezó (año-mes); los destacados van primero y el resto del más nuevo al más antiguo
   // platforms: "iphone", "android" o "web" (alimentan los filtros y las cifras)
   // links: "web", "store" o "play"; si falta el de la App Store, se deja vacío
   projects: [
@@ -303,7 +303,7 @@ let filter = "all";
 let openId = null;
 
 const ordered = () => [...PROFILE.projects].sort((a, b) =>
-  (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (a.featured ? 0 : a.since.localeCompare(b.since)));
+  (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (a.featured ? 0 : b.since.localeCompare(a.since)));
 
 function render() {
   const t = CONTENT[lang];
