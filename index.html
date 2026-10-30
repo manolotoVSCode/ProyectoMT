@@ -197,7 +197,7 @@ const PROFILE = {
   github: "https://github.com/manolotoVSCode",
   // stack: lenguajes y herramientas; featured: tarjeta destacada (ocupa dos columnas)
   // since: cuándo empezó (año-mes); los destacados van primero y el resto del más nuevo al más antiguo
-  // platforms: "iphone", "android", "web", "sheets" o "ia" (alimentan los filtros y las cifras)
+  // platforms: "iphone", "android", "web", "sheets", "ia" o "electricidad" (alimentan los filtros y las cifras)
   // links: "web", "store", "play", "mail" o "github"; si falta el de la App Store, se deja vacío
   // es.name / en.name: nombre por idioma, si cambia; agents: lista opcional de agentes con su diagrama
   // shots (webs): en lugar de imgs, cada captura con su título y explicación; { phones: [...] } junta dos del iPhone en una fila y { phone } pone una sola
@@ -291,6 +291,31 @@ const PROFILE = {
       links: [{ type: "web", url: "https://saviumcorporate.manoloto.com" }],
       es: { tag: "Las finanzas de una PyME, sin contabilidad.", desc: "Gestión financiera para PyMEs mexicanas: estado de resultados, balance, flujo de caja e índices financieros con semáforos, sin saber de contabilidad." },
       en: { tag: "Small-business finances, no accounting needed.", desc: "Financial management for Mexican small businesses: income statement, balance sheet, cash flow and financial ratios with traffic lights, no accounting knowledge needed." } },
+    { id: "tablero-n3", since: "2026-04-18", wide: true, name: "Tablero N3", platforms: ["electricidad"], icon: "img/icons/tablero-n3.svg",
+      stack: ["NEC (NFPA 70)", "ABB System pro M", "Riel DIN", "Home Assistant"],
+      shots: [ // del escenario propuesto de la herramienta de diseño; las dos primeras son ilustraciones, no fotos
+        { src: "img/tablero-n3-real.webp",
+          es: { title: "Así se ve", text: "Una ilustración del tablero propuesto, a escala: la puerta con el medidor de energía y, abierta, el frente muerto con las cuatro filas de aparatos ABB y sus etiquetas." },
+          en: { title: "What it looks like", text: "An illustration of the proposed panel, to scale: the door with the energy meter and, open, the dead front with the four rows of ABB devices and their labels." } },
+        { src: "img/tablero-n3-detalle.webp",
+          es: { title: "De cerca", text: "Las dos filas de arriba: el IGA, los tres supresores, los contactores de red y planta con su enclavamiento, los relevadores de sobretensión y los GFCI de las zonas húmedas." },
+          en: { title: "Up close", text: "The top two rows: the main breaker, the three surge protectors, the grid and generator contactors with their interlock, the overvoltage relays and the wet-area GFCIs." } },
+        { src: "img/tablero-n3-1.webp",
+          es: { title: "El gabinete a escala", text: "Cuatro filas de 24 módulos con cada interruptor, su calibre y su fase: cabecera y transferencia, sobretensión y zonas húmedas, alumbrado y contactos, y aires acondicionados." },
+          en: { title: "The enclosure to scale", text: "Four rows of 24 modules with each breaker, its rating and its phase: main breaker and transfer, overvoltage and wet areas, lighting and receptacles, and air conditioners." } },
+        { src: "img/tablero-n3-2.webp",
+          es: { title: "Respaldo solo para lo crítico", text: "De la acometida al IGA de 60 A y a la transferencia: K1 de la red y K2 de la planta, enclavados, alimentan refrigerador, router y pasillo sin diferencial. Tres relevadores sacan a K1 si la tensión pasa de 140 V." },
+          en: { title: "Backup for the essentials only", text: "From the service to the 60 A main breaker and the transfer: K1 from the grid and K2 from the generator, interlocked, feed the fridge, router and hallway with no RCD. Three relays drop K1 if voltage goes over 140 V." } },
+        { src: "img/tablero-n3-3.webp",
+          es: { title: "Fases y zonas húmedas", text: "La corriente de diseño por fase, con 12 % de desbalance, y la fila de cocina, baños y lavandería: un GFCI de 5 mA por circuito y un diferencial de 30 mA como respaldo." },
+          en: { title: "Phases and wet areas", text: "Design current per phase, with 12% imbalance, and the kitchen, bathroom and laundry row: a 5 mA GFCI per circuit and a 30 mA RCD as backup." } },
+        { src: "img/tablero-n3-4.webp",
+          es: { title: "Lo que no cumple, por escrito", text: "Las alertas declaran las excepciones: sin AFCI porque no encontré uno para riel DIN, la corriente de falla supuesta en 10 kA y la NOM sin consultar." },
+          en: { title: "What it doesn't meet, in writing", text: "The alerts state the exceptions: no AFCI because I couldn't find one for DIN rail, fault current assumed at 10 kA and the Mexican NOM not consulted." } },
+      ],
+      links: [], // privado
+      es: { tag: "El tablero eléctrico de mi casa, que diseñé e instalé.", desc: "El tablero trifásico de una casa, 127/220 V, con aparatos ABB en riel DIN. Diseñado e instalado por mí con criterios del NEC de EE. UU.; no está certificado ni verificado contra la NOM. Lo diseñé con una herramienta propia que dibuja el gabinete a escala, el unifilar, el cuadro de cargas y las alertas. La planta de emergencia respalda solo lo crítico, la misma transferencia protege contra sobretensiones sostenidas, las zonas húmedas llevan GFCI de 5 mA y lo que no cumple está declarado por escrito." },
+      en: { name: "N3 Electrical Panel", tag: "My home's electrical panel, which I designed and installed.", desc: "A three-phase 127/220 V panel for a house, with ABB devices on DIN rail. Designed and installed by me following the US NEC; it isn't certified or checked against Mexico's NOM. I designed it with my own tool that draws the enclosure to scale, the single-line diagram, the load schedule and the alerts. The generator backs up only the essentials, the same transfer protects against sustained overvoltage, wet areas get 5 mA GFCIs, and whatever it doesn't meet is stated in writing." } },
     { id: "savium-condo", since: "2026-04-16", wide: true, name: "Savium Condo", platforms: ["web"],
       stack: ["React", "TypeScript", "Tailwind", "Supabase"],
       shots: [
@@ -415,9 +440,9 @@ const PROFILE = {
 const CONTENT = {
   es: {
     title: "Apps, webs y otras cosas que hago en mi <em>tiempo libre</em>.",
-    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", web: "sitios web", sheets: "hojas de cálculo", ia: "herramientas de IA" },
-    filters: { all: "Todo", iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA" },
-    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA" },
+    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", web: "sitios web", sheets: "hojas de cálculo", ia: "herramientas de IA", electricidad: "proyectos eléctricos" },
+    filters: { all: "Todo", iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
+    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
     filterLabel: "Filtrar por plataforma",
     web: "Abrir web", store: "App Store", play: "Google Play", mail: "Pedirla gratis por correo", github: "Ver en GitHub",
     agents: "Los agentes", shots: "En pantalla", tools: "Herramientas", enforce: "Cómo se hace cumplir",
@@ -428,9 +453,9 @@ const CONTENT = {
   },
   en: {
     title: "Apps, sites and other things I make in my <em>free time</em>.",
-    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", web: "websites", sheets: "spreadsheets", ia: "AI tools" },
-    filters: { all: "All", iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI" },
-    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI" },
+    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", web: "websites", sheets: "spreadsheets", ia: "AI tools", electricidad: "electrical projects" },
+    filters: { all: "All", iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
+    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
     filterLabel: "Filter by platform",
     web: "Open site", store: "App Store", play: "Google Play", mail: "Ask for it free by email", github: "View on GitHub",
     agents: "The agents", shots: "On screen", tools: "Tools", enforce: "How it's enforced",
@@ -452,7 +477,7 @@ const count = (pf) => pf === "all" ? PROFILE.projects.length : PROFILE.projects.
 const icon = (p) => p.icon || `img/icons/${p.id}.png`;
 const nameOf = (p) => p[lang].name || p.name;
 const agentImg = (p, a) => `${p.agentsDir || "img/agentes"}/${a.id}-${lang}.webp`;
-const PLATFORMS = ["all", "iphone", "android", "web", "sheets", "ia"];
+const PLATFORMS = ["all", "iphone", "android", "web", "sheets", "ia", "electricidad"];
 
 let lang = store.get("lang") === "en" ? "en" : "es";
 let filter = "all";
