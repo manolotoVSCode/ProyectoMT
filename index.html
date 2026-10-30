@@ -201,6 +201,7 @@ const PROFILE = {
   // links: "web", "store", "play", "mail" o "github"; si falta el de la App Store, se deja vacío
   // es.name / en.name: nombre por idioma, si cambia; agents: lista opcional de agentes con su diagrama
   // shots (webs): en lugar de imgs, cada captura con su título y explicación; { phones: [...] } junta dos del iPhone en una fila y { phone } pone una sola
+  // cada agente: tools es opcional y es.name / en.name cambian su título por idioma
   // agentsDir: carpeta de esos diagramas (por omisión img/agentes); es.agentsTitle / en.agentsTitle: título de la sección, si cambia
   projects: [
     { id: "chp-web", since: "2026-01", name: "CHP App", platforms: ["web", "iphone"], featured: true, wide: true, icon: "img/icons/chp-app.png",
@@ -428,6 +429,24 @@ const PROFILE = {
           es: { role: "Un skill que corre un script incluido sobre la carpeta (y, si se pide, el historial de git) y reporta los secretos con solo sus primeros cuatro caracteres.", enforce: "El script solo lee: no usa la red, no escribe en disco y no ejecuta lo que lee. El skill no limita las herramientas de Claude; que no use la red depende de sus instrucciones.", alt: "Diagrama de secret-audit: revisa la carpeta y, opcionalmente, el historial; el script solo lee y el reporte muestra los secretos recortados." },
           en: { role: "A skill that runs a bundled script over the folder (and git history, if asked) and reports secrets showing only their first four characters.", enforce: "The script only reads: no network, no writes to disk, and it never runs what it reads. The skill doesn't restrict Claude's tools; staying offline relies on its instructions.", alt: "secret-audit diagram: it scans the folder and, optionally, git history; the script only reads and the report shows truncated secrets." } },
       ] },
+    { id: "mt-criterio", since: "2026-10-29", wide: true, name: "MT Criterio", platforms: ["ia"],
+      stack: ["Claude", "Markdown"],
+      imgs: [], // cada grupo de reglas lleva su propio diagrama, en es y en
+      links: [{ type: "github", url: "https://github.com/manolotoVSCode/mt-criterio" }],
+      agentsDir: "img/mt-criterio",
+      es: { tag: "Un skill que fija cómo trabaja Claude en tareas de trabajo: directo, verificado y sin suposiciones.", desc: "Un skill de código abierto (licencia MIT) para los chats de Claude, empaquetado como plugin. Cuando la tarea es de trabajo, técnica o con consecuencias, como un informe, un contrato, un presupuesto o un correo a un cliente, Claude responde primero y sin relleno, dice si ve un error antes de actuar y no afirma versiones, precios, fechas, leyes ni cifras sin una fuente comprobable. Si falta un dato que cambia el resultado, lo pide con un cuestionario de una pregunta a la vez. Al cerrar una decisión propone una nota para su memoria y la guarda solo si la aceptas. No escribe archivos, no hace llamadas de red y no ejecuta scripts. Ya lo envié al directorio de plugins de Anthropic y está en revisión.", agentsTitle: "Qué incluye" },
+      en: { tag: "A skill that sets how Claude works on work tasks: direct, verified and with no guessing.", desc: "An open-source skill (MIT license) for Claude chats, packaged as a plugin. When the task is work, technical or consequential, like a report, a contract, a budget or an email to a client, Claude answers first with no filler, flags an error before acting, and doesn't state versions, prices, dates, laws or figures without a checkable source. If a detail that changes the result is missing, it asks with a questionnaire, one question at a time. When a decision is closed it proposes a note for its memory and saves it only if you accept. It doesn't write files, make network calls or run scripts. I've submitted it to Anthropic's plugin directory and it's under review.", agentsTitle: "What's inside" },
+      agents: [ // grupos de reglas del skill, no agentes: sin herramientas propias
+        { id: "cuestionario", name: "Cuestionario",
+          es: { role: "Antes de preguntar busca el dato en los adjuntos, los mensajes y la memoria. Si falta uno que cambia el resultado, pregunta de una en una, con la respuesta recomendada primero; si el problema sigue abierto, plantea tres escenarios y te deja elegir.", enforce: "Son instrucciones, no código: dependen de que Claude las siga. Usa opciones con clic cuando la herramienta está disponible y, si no, una lista numerada.", alt: "Diagrama del cuestionario: falta un dato, Claude lo busca, pregunta una cosa a la vez y, si sigue abierto, plantea tres escenarios." },
+          en: { name: "Questionnaire", role: "Before asking, it looks for the detail in attachments, messages and memory. If one that changes the result is missing, it asks one question at a time, with the recommended answer first; if the problem stays open, it lays out three scenarios and lets you choose.", enforce: "These are instructions, not code: they rely on Claude following them. It uses clickable options when that tool is available, and a numbered list otherwise.", alt: "Questionnaire diagram: a detail is missing, Claude looks for it, asks one thing at a time and, if it stays open, lays out three scenarios." } },
+        { id: "verificacion", name: "Verificación",
+          es: { role: "No da de memoria versiones, precios, fechas, leyes ni cifras: pide una fuente comprobable, dice dónde buscó y, antes de decir que terminó, revisa cada requisito que pediste.", enforce: "Si no puede comprobar un dato lo dice en lugar de suponer, así que algunas respuestas quedan incompletas a propósito.", alt: "Diagrama de verificación: un dato de trabajo pasa por una fuente comprobable; sin fuente, Claude dice que no lo tiene." },
+          en: { name: "Verification", role: "It doesn't give versions, prices, dates, laws or figures from memory: it needs a checkable source, says where it looked and, before saying it's done, checks each requirement you gave.", enforce: "When it can't check a fact it says so instead of guessing, so some answers are incomplete by design.", alt: "Verification diagram: a work fact goes through a checkable source; without one, Claude says it doesn't have it." } },
+        { id: "memoria", name: "Memoria",
+          es: { role: "Cuando se cierra una decisión o se pausa un trabajo, propone en una línea una nota con fecha y motivo para la memoria de Claude. Al retomar, dice qué notas usa y las comprueba contra la fuente.", enforce: "No guarda nada sin tu aceptación y nunca propone lo que marques como privado. Usa la memoria propia de Claude, según tus ajustes.", alt: "Diagrama de memoria: al cerrar una decisión, Claude propone una nota y solo la guarda si la aceptas." },
+          en: { name: "Memory", role: "When a decision is closed or work is paused, it proposes a one-line note with date and reason for Claude's memory. When you return, it says which notes it's using and checks them against the source.", enforce: "It saves nothing without your acceptance and never proposes what you mark as private. It uses Claude's own memory, under your settings.", alt: "Memory diagram: when a decision is closed, Claude proposes a note and saves it only if you accept." } },
+      ] },
     { id: "little-galaxy", since: "2025-01", name: "Little Galaxy", platforms: ["iphone", "web"],
       stack: ["React", "TypeScript", "Capacitor"],
       imgs: ["img/little-galaxy-1.webp", "img/little-galaxy-2.webp"],
@@ -554,9 +573,9 @@ function fillSheet(id) {
       <article class="agent">
         <img src="${esc(agentImg(p, a))}" alt="${esc(a[lang].alt)}" width="1280" height="800" decoding="async">
         <div>
-          <h4>${esc(a.name)}</h4>
-          <p>${esc(a[lang].role)}</p>
-          <div class="chips" aria-label="${esc(t.tools)}">${a.tools.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
+          <h4>${esc(a[lang].name || a.name)}</h4>
+          <p>${esc(a[lang].role)}</p>${a.tools ? `
+          <div class="chips" aria-label="${esc(t.tools)}">${a.tools.map((s) => `<span>${esc(s)}</span>`).join("")}</div>` : ""}
           <p class="enforce"><b>${esc(t.enforce)}</b>${esc(a[lang].enforce)}</p>
         </div>
       </article>`).join("")}
