@@ -94,6 +94,12 @@ a.copy { color: var(--ink); text-decoration: none; }
 .contact h2 { font: 800 clamp(28px, 5vw, 44px)/1 var(--display); letter-spacing: -.02em; margin: 0; width: 100%; }
 .mail { font-size: clamp(18px, 3vw, 22px); font-weight: 500; user-select: all; overflow-wrap: anywhere; }
 .copy { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 14px; }
+.mailbox { display: inline-flex; align-items: center; gap: 4px; min-width: 0; }
+.copy-icon { display: inline-grid; place-items: center; width: 32px; height: 32px; flex: none; border: 0; background: none;
+  border-radius: 8px; color: var(--muted); cursor: pointer; padding: 0; transition: color .15s, background-color .15s; }
+.copy-icon:hover { color: var(--ink); background: var(--line); }
+.copy-icon svg { width: 18px; height: 18px; }
+.copy-icon.done { color: var(--accent); }
 .foot { text-align: center; color: var(--muted); font: 400 12px/1.5 var(--mono); padding-block: 32px 28px; margin: 0; }
 
 /* Ficha */
@@ -171,9 +177,12 @@ dialog::backdrop { background: var(--shade); }
 
     <section class="contact" id="contacto">
       <h2 id="contactTitle"></h2>
-      <span class="mail" id="mail"></span>
-      <button type="button" class="copy" id="copyBtn"></button>
+      <span class="mailbox">
+        <span class="mail" id="mail"></span>
+        <button type="button" class="copy-icon" id="copyBtn"></button>
+      </span>
       <a class="copy" id="github" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="copy" id="linkedin" target="_blank" rel="noopener">LinkedIn ↗</a>
     </section>
   </main>
   <p class="foot" id="foot"></p>
@@ -193,6 +202,7 @@ dialog::backdrop { background: var(--shade); }
 const PROFILE = {
   email: "contacto@manoloto.com",
   github: "https://github.com/manolotoVSCode",
+  linkedin: "https://www.linkedin.com/in/manueldelatorrerod/",
   // stack: lenguajes y herramientas; featured: tarjeta destacada (ocupa dos columnas)
   // since: cuándo empezó (año-mes); los destacados van primero y el resto del más nuevo al más antiguo
   // platforms: "iphone", "android", "mac", "web", "sheets", "ia" o "electricidad" (alimentan los filtros y las cifras)
@@ -514,6 +524,9 @@ const count = (pf) => pf === "all" ? PROFILE.projects.length : PROFILE.projects.
 const icon = (p) => p.icon || `img/icons/${p.id}.png`;
 const nameOf = (p) => p[lang].name || p.name;
 const agentImg = (p, a) => `${p.agentsDir || "img/agentes"}/${a.id}-${lang}.webp`;
+const SVG = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICON_COPY = SVG('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/>');
+const ICON_CHECK = SVG('<path d="M5 12.5l4.5 4.5L19 7.5"/>');
 const PLATFORMS = ["all", "iphone", "android", "mac", "web", "sheets", "ia", "electricidad"];
 
 let lang = store.get("lang") === "en" ? "en" : "es";
@@ -546,8 +559,12 @@ function render() {
 
   $("contactTitle").textContent = t.contactTitle;
   $("mail").textContent = PROFILE.email;
-  $("copyBtn").textContent = t.copy;
+  $("copyBtn").innerHTML = ICON_COPY;
+  $("copyBtn").classList.remove("done");
+  $("copyBtn").setAttribute("aria-label", t.copy);
+  $("copyBtn").title = t.copy;
   $("github").href = PROFILE.github;
+  $("linkedin").href = PROFILE.linkedin;
   $("sheetClose").setAttribute("aria-label", t.close);
   $("foot").textContent = `© ${new Date().getFullYear()} · ${t.foot}`;
   document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
@@ -624,7 +641,11 @@ document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("cli
   lang = b.dataset.lang; store.set("lang", lang); render();
 }));
 $("copyBtn").addEventListener("click", () => {
-  const done = () => { $("copyBtn").textContent = CONTENT[lang].copied; setTimeout(() => { $("copyBtn").textContent = CONTENT[lang].copy; }, 1600); };
+  const b = $("copyBtn");
+  const done = () => {
+    b.innerHTML = ICON_CHECK; b.classList.add("done"); b.setAttribute("aria-label", CONTENT[lang].copied); b.title = CONTENT[lang].copied;
+    setTimeout(() => { b.innerHTML = ICON_COPY; b.classList.remove("done"); b.setAttribute("aria-label", CONTENT[lang].copy); b.title = CONTENT[lang].copy; }, 1600);
+  };
   const fallback = () => { const r = document.createRange(); r.selectNodeContents($("mail")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
   try { navigator.clipboard.writeText(PROFILE.email).then(done, fallback); } catch { fallback(); }
 });
