@@ -197,7 +197,7 @@ const PROFILE = {
   github: "https://github.com/manolotoVSCode",
   // stack: lenguajes y herramientas; featured: tarjeta destacada (ocupa dos columnas)
   // since: cuándo empezó (año-mes); los destacados van primero y el resto del más nuevo al más antiguo
-  // platforms: "iphone", "android", "web", "sheets", "ia" o "electricidad" (alimentan los filtros y las cifras)
+  // platforms: "iphone", "android", "mac", "web", "sheets", "ia" o "electricidad" (alimentan los filtros y las cifras)
   // links: "web", "store", "play", "mail" o "github"; si falta el de la App Store, se deja vacío
   // es.name / en.name: nombre por idioma, si cambia; agents: lista opcional de agentes con su diagrama
   // shots (webs): en lugar de imgs, cada captura con su título y explicación; { phones: [...] } junta dos del iPhone en una fila y { phone } pone una sola
@@ -447,6 +447,25 @@ const PROFILE = {
           es: { role: "Cuando se cierra una decisión o se pausa un trabajo, propone en una línea una nota con fecha y motivo para la memoria de Claude. Al retomar, dice qué notas usa y las comprueba contra la fuente.", enforce: "No guarda nada sin tu aceptación y nunca propone lo que marques como privado. Usa la memoria propia de Claude, según tus ajustes.", alt: "Diagrama de memoria: al cerrar una decisión, Claude propone una nota y solo la guarda si la aceptas." },
           en: { name: "Memory", role: "When a decision is closed or work is paused, it proposes a one-line note with date and reason for Claude's memory. When you return, it says which notes it's using and checks them against the source.", enforce: "It saves nothing without your acceptance and never proposes what you mark as private. It uses Claude's own memory, under your settings.", alt: "Memory diagram: when a decision is closed, Claude proposes a note and saves it only if you accept." } },
       ] },
+    { id: "claudio", since: "2026-11-02", wide: true, name: "Claudio", platforms: ["mac", "ia"],
+      stack: ["Swift", "SwiftUI", "Claude Code", "Bash", "Python"],
+      shots: [ // del modo de captura del panel, sin datos privados
+        { src: "img/claudio-1.webp",
+          es: { title: "El resumen", text: "El interruptor general de Claudio, cuántas capacidades están activas, desactivadas o por desarrollar, y lo que falta por desbloquear, con un botón cuando depende de mí." },
+          en: { title: "The overview", text: "Claudio's master switch, how many capabilities are active, off or still to build, and what's left to unlock, with a button when it's up to me." } },
+        { src: "img/claudio-2.webp",
+          es: { title: "Permisos", text: "Qué puede hacer: leer, buscar y correr comandos de solo lectura. El modo edición se enciende aquí; sin él no edita, no hace commits ni instala nada." },
+          en: { title: "Permissions", text: "What it can do: read, search and run read-only commands. Edit mode is switched on here; without it, it doesn't edit, commit or install anything." } },
+        { src: "img/claudio-3.webp",
+          es: { title: "Plugins", text: "Los plugins de Claude Code que usa, cada uno con su interruptor. Se encienden y apagan con el comando claude, así que afectan a todas las sesiones." },
+          en: { title: "Plugins", text: "The Claude Code plugins it uses, each with its own switch. They're turned on and off with the claude command, so they affect every session." } },
+        { src: "img/claudio-4.webp",
+          es: { title: "Voz y cara", text: "La voz que lee la conclusión de cada respuesta, su velocidad y un botón para escucharla, junto a lo que falta: la cara animada y una voz más natural." },
+          en: { title: "Voice and face", text: "The voice that reads out each answer's conclusion, its speed and a button to hear it, next to what's still to come: an animated face and a more natural voice." } },
+      ],
+      links: [], // de uso personal
+      es: { name: "Claudio y su panel", tag: "Mi agente personal en Claude Code y la app de Mac para controlarlo.", desc: "Claudio es un agente de Claude Code que revisa lo que le pida, ya sea código, un documento, un correo, un deploy o una base de datos, delegando en los subagentes, skills y conectores adecuados, y responde primero con la conclusión y luego con la evidencia. Al terminar, lee esa primera frase en voz alta con una voz de macOS. Revisar es leer: un hook bloquea cualquier edición o comando que cambie algo mientras el modo edición esté apagado, y un interruptor general lo deja sin herramientas. ClaudioPanel es una app nativa de Mac en SwiftUI que muestra todas sus capacidades con su estado y maneja esos interruptores, la voz y los plugins de Claude Code. Antes de cada cambio guarda una copia de la configuración." },
+      en: { name: "Claudio and its panel", tag: "My personal agent in Claude Code and the Mac app to control it.", desc: "Claudio is a Claude Code agent that reviews whatever I ask, whether it's code, a document, an email, a deploy or a database, delegating to the right subagents, skills and connectors, and answers with the conclusion first and the evidence after. When it finishes, it reads that first sentence aloud with a macOS voice. Reviewing means reading: a hook blocks any edit or command that changes something while edit mode is off, and a master switch leaves it with no tools at all. ClaudioPanel is a native SwiftUI Mac app that shows all its capabilities with their status and handles those switches, the voice and the Claude Code plugins. Before each change it backs up the configuration." } },
     { id: "little-galaxy", since: "2025-01", name: "Little Galaxy", platforms: ["iphone", "web"],
       stack: ["React", "TypeScript", "Capacitor"],
       imgs: ["img/little-galaxy-1.webp", "img/little-galaxy-2.webp"],
@@ -459,9 +478,9 @@ const PROFILE = {
 const CONTENT = {
   es: {
     title: "Apps, webs y otras cosas que hago en mi <em>tiempo libre</em>.",
-    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", web: "sitios web", sheets: "hojas de cálculo", ia: "herramientas de IA", electricidad: "proyectos eléctricos" },
-    filters: { all: "Todo", iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
-    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
+    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", mac: "apps de Mac", web: "sitios web", sheets: "hojas de cálculo", ia: "herramientas de IA", electricidad: "proyectos eléctricos" },
+    filters: { all: "Todo", iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
+    chips: { iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
     filterLabel: "Filtrar por plataforma",
     web: "Abrir web", store: "App Store", play: "Google Play", mail: "Pedirla gratis por correo", github: "Ver en GitHub",
     agents: "Los agentes", shots: "En pantalla", tools: "Herramientas", enforce: "Cómo se hace cumplir",
@@ -472,9 +491,9 @@ const CONTENT = {
   },
   en: {
     title: "Apps, sites and other things I make in my <em>free time</em>.",
-    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", web: "websites", sheets: "spreadsheets", ia: "AI tools", electricidad: "electrical projects" },
-    filters: { all: "All", iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
-    chips: { iphone: "iPhone", android: "Android", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
+    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", mac: "Mac apps", web: "websites", sheets: "spreadsheets", ia: "AI tools", electricidad: "electrical projects" },
+    filters: { all: "All", iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
+    chips: { iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
     filterLabel: "Filter by platform",
     web: "Open site", store: "App Store", play: "Google Play", mail: "Ask for it free by email", github: "View on GitHub",
     agents: "The agents", shots: "On screen", tools: "Tools", enforce: "How it's enforced",
@@ -496,7 +515,7 @@ const count = (pf) => pf === "all" ? PROFILE.projects.length : PROFILE.projects.
 const icon = (p) => p.icon || `img/icons/${p.id}.png`;
 const nameOf = (p) => p[lang].name || p.name;
 const agentImg = (p, a) => `${p.agentsDir || "img/agentes"}/${a.id}-${lang}.webp`;
-const PLATFORMS = ["all", "iphone", "android", "web", "sheets", "ia", "electricidad"];
+const PLATFORMS = ["all", "iphone", "android", "mac", "web", "sheets", "ia", "electricidad"];
 
 let lang = store.get("lang") === "en" ? "en" : "es";
 let filter = "all";
