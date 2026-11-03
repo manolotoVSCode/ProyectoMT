@@ -55,10 +55,11 @@ button { font: inherit; color: inherit; }
 .head { padding-block: 40px 28px; }
 h1 { font: 800 clamp(38px, 7.4vw, 80px)/.98 var(--display); letter-spacing: -.03em; margin: 0; text-wrap: balance; max-width: 16ch; }
 h1 em { font-style: normal; color: var(--accent); }
-.stats { display: flex; flex-wrap: wrap; gap: 10px 32px; margin: 32px 0 0; padding: 0; list-style: none; }
-.stats li { display: flex; flex-direction: column; }
-.stats b { font: 700 34px/1 var(--display); font-variant-numeric: tabular-nums; }
-.stats span { font: 400 12px/1.4 var(--mono); color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin-top: 6px; }
+.intro { display: flex; align-items: center; gap: 16px; margin-top: 28px; }
+.avatar { width: 64px; height: 64px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px var(--line); flex: none; }
+.intro p { margin: 0; color: var(--muted); max-width: 52ch; }
+.filters .n { font: 500 12px/1 var(--mono); margin-left: 6px; opacity: .6; font-variant-numeric: tabular-nums; }
+.filters button[aria-pressed="true"] .n { opacity: .85; }
 
 /* Filtros */
 .filters { display: flex; flex-wrap: wrap; gap: 8px; padding-block: 8px 20px; }
@@ -138,9 +139,8 @@ dialog::backdrop { background: var(--shade); }
 .close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%;
   border: 1px solid var(--line); background: var(--card); cursor: pointer; font-size: 18px; line-height: 1; }
 @media (max-width: 640px) {
-  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; margin-top: 24px; }
-  .stats b { font-size: 26px; }
-  .stats span { font-size: 11px; letter-spacing: .02em; }
+  .intro { align-items: flex-start; gap: 14px; margin-top: 24px; }
+  .avatar { width: 52px; height: 52px; }
   .app { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; padding: 16px; }
   .app .icon { width: 56px; height: 56px; margin: 0; grid-row: span 5; }
   .app.feature h2 { font-size: 24px; }
@@ -169,7 +169,10 @@ dialog::backdrop { background: var(--shade); }
   <main>
     <section class="head">
       <h1 id="title"></h1>
-      <ul class="stats" id="stats"></ul>
+      <div class="intro">
+        <img class="avatar" src="img/manuel.png" alt="" width="64" height="64">
+        <p id="bio"></p>
+      </div>
     </section>
     <div class="filters" id="filters" role="group"></div>
     <div class="grid" id="grid"></div>
@@ -484,7 +487,7 @@ const PROFILE = {
 const CONTENT = {
   es: {
     title: "Apps, webs y otras cosas que hago en mi <em>tiempo libre</em>.",
-    stats: { all: "proyectos", iphone: "apps de iPhone", android: "apps de Android", mac: "apps de Mac", web: "sitios web", sheets: "hojas de cálculo", ia: "herramientas de IA", electricidad: "proyectos eléctricos" },
+    bio: "Soy Manuel. Llevo {n} proyectos hechos por mi cuenta: apps, webs, hojas de cálculo y herramientas de IA, casi todos para resolver algo que yo mismo necesitaba.",
     filters: { all: "Todo", iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
     chips: { iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
     filterLabel: "Filtrar por plataforma",
@@ -497,7 +500,7 @@ const CONTENT = {
   },
   en: {
     title: "Apps, sites and other things I make in my <em>free time</em>.",
-    stats: { all: "projects", iphone: "iPhone apps", android: "Android apps", mac: "Mac apps", web: "websites", sheets: "spreadsheets", ia: "AI tools", electricidad: "electrical projects" },
+    bio: "I'm Manuel. I've built {n} projects on my own: apps, sites, spreadsheets and AI tools, most of them to solve something I needed myself.",
     filters: { all: "All", iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
     chips: { iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
     filterLabel: "Filter by platform",
@@ -535,12 +538,11 @@ function render() {
   document.documentElement.lang = lang;
   $("title").innerHTML = t.title;
 
-  $("stats").innerHTML = PLATFORMS.map((k) =>
-    `<li><b>${count(k)}</b><span>${esc(t.stats[k])}</span></li>`).join("");
+  $("bio").textContent = t.bio.replace("{n}", count("all"));
 
   $("filters").setAttribute("aria-label", t.filterLabel);
   $("filters").innerHTML = PLATFORMS.map((k) =>
-    `<button type="button" id="filter-${k}" data-filter="${k}" aria-pressed="${k === filter}">${esc(t.filters[k])}</button>`).join("");
+    `<button type="button" id="filter-${k}" data-filter="${k}" aria-pressed="${k === filter}">${esc(t.filters[k])}<span class="n">${count(k)}</span></button>`).join("");
 
   $("grid").innerHTML = ordered()
     .filter((p) => filter === "all" || p.platforms.includes(filter))
