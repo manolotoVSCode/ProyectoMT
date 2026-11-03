@@ -45,7 +45,8 @@ button { font: inherit; color: inherit; }
 
 /* Barra */
 .bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 20px; }
-.who { font-weight: 600; font-size: 15px; }
+.who { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px var(--line); flex: none; }
 .lang { display: flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
 .lang button { border: 0; background: none; padding: 4px 11px; border-radius: 999px; cursor: pointer;
   font: 500 12px/1 var(--mono); letter-spacing: .06em; color: var(--muted); }
@@ -55,9 +56,6 @@ button { font: inherit; color: inherit; }
 .head { padding-block: 40px 28px; }
 h1 { font: 800 clamp(38px, 7.4vw, 80px)/.98 var(--display); letter-spacing: -.03em; margin: 0; text-wrap: balance; max-width: 16ch; }
 h1 em { font-style: normal; color: var(--accent); }
-.intro { display: flex; align-items: center; gap: 16px; margin-top: 28px; }
-.avatar { width: 64px; height: 64px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px var(--line); flex: none; }
-.intro p { margin: 0; color: var(--muted); max-width: 52ch; }
 .filters .n { font: 500 12px/1 var(--mono); margin-left: 6px; opacity: .6; font-variant-numeric: tabular-nums; }
 .filters button[aria-pressed="true"] .n { opacity: .85; }
 
@@ -139,8 +137,6 @@ dialog::backdrop { background: var(--shade); }
 .close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%;
   border: 1px solid var(--line); background: var(--card); cursor: pointer; font-size: 18px; line-height: 1; }
 @media (max-width: 640px) {
-  .intro { align-items: flex-start; gap: 14px; margin-top: 24px; }
-  .avatar { width: 52px; height: 52px; }
   .app { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; padding: 16px; }
   .app .icon { width: 56px; height: 56px; margin: 0; grid-row: span 5; }
   .app.feature h2 { font-size: 24px; }
@@ -159,7 +155,7 @@ dialog::backdrop { background: var(--shade); }
 
 <div class="wrap">
   <header class="bar">
-    <span class="who">Manuel de la Torre</span>
+    <span class="who"><img class="avatar" src="img/manuel.png" alt="" width="36" height="36">Manuel de la Torre</span>
     <div class="lang" role="group" aria-label="Idioma / Language">
       <button type="button" id="lang-es" data-lang="es">ES</button>
       <button type="button" id="lang-en" data-lang="en">EN</button>
@@ -169,10 +165,6 @@ dialog::backdrop { background: var(--shade); }
   <main>
     <section class="head">
       <h1 id="title"></h1>
-      <div class="intro">
-        <img class="avatar" src="img/manuel.png" alt="" width="64" height="64">
-        <p id="bio"></p>
-      </div>
     </section>
     <div class="filters" id="filters" role="group"></div>
     <div class="grid" id="grid"></div>
@@ -487,7 +479,6 @@ const PROFILE = {
 const CONTENT = {
   es: {
     title: "Apps, webs y otras cosas que hago en mi <em>tiempo libre</em>.",
-    bio: "Soy Manuel. Llevo {n} proyectos hechos por mi cuenta: apps, webs, hojas de cálculo y herramientas de IA, casi todos para resolver algo que yo mismo necesitaba.",
     filters: { all: "Todo", iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
     chips: { iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Hojas de cálculo", ia: "IA", electricidad: "Electricidad" },
     filterLabel: "Filtrar por plataforma",
@@ -500,7 +491,6 @@ const CONTENT = {
   },
   en: {
     title: "Apps, sites and other things I make in my <em>free time</em>.",
-    bio: "I'm Manuel. I've built {n} projects on my own: apps, sites, spreadsheets and AI tools, most of them to solve something I needed myself.",
     filters: { all: "All", iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
     chips: { iphone: "iPhone", android: "Android", mac: "Mac", web: "Web", sheets: "Spreadsheets", ia: "AI", electricidad: "Electrical" },
     filterLabel: "Filter by platform",
@@ -538,7 +528,6 @@ function render() {
   document.documentElement.lang = lang;
   $("title").innerHTML = t.title;
 
-  $("bio").textContent = t.bio.replace("{n}", count("all"));
 
   $("filters").setAttribute("aria-label", t.filterLabel);
   $("filters").innerHTML = PLATFORMS.map((k) =>
